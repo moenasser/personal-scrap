@@ -34,10 +34,16 @@ public class QuickSort {
 	
 	private int partition(int[] A, int l, int r){
 		int pivot = -1;//A[l];
+		int _pivIdx = -1;
 		switch(pivotLocation){
-		case LEFT : pivot = A[l]; break;
-		case MEDIAN : pivot = getMiddlePivot(l, r); break;
-		case RANDOM : pivot = getRandomPivot(l, r); break;
+		case LEFT : pivot = A[l]; 
+			break;
+		case MEDIAN : 
+			_pivIdx = getMiddlePivot(l, r); 
+		case RANDOM : 
+			_pivIdx = getRandomPivot(l, r);
+			pivot = A[_pivIdx];
+			swap(A, l, _pivIdx);  // switch pivot so partition logic doesn't change
 		}
 		/*
 		System.out.print("A["+l+".."+r+"]=[");
@@ -76,19 +82,40 @@ public class QuickSort {
 	public void doQuickSort(int[] A){
 		callsToPartition = 0;
 		elementsVisited = 0;
-		System.out.println(Arrays.toString(A));
+		//System.out.println(Arrays.toString(A));
 
 		quickSort( A, 0, A.length - 1);
 		
-		System.out.println(Arrays.toString(A));
+		//System.out.println(Arrays.toString(A));
 		System.out.println("Test is sorted = " + testIsSorted(A));
-		double n_log_n = A.length * (Math.log(A.length)/Math.log(2));
-		System.out.println("n = "+ A.length 
-				+ ". Calls to partition = " + callsToPartition 
-				+ ". Elements visisted = " + elementsVisited
-				+ ". n*log(n) = " + n_log_n
-				+ ". (n^2)/4 = " + (long)(Math.pow(A.length, 2)/4) );
+		ResultCounts rc = new ResultCounts(A.length, callsToPartition, elementsVisited);
+		System.out.println(rc);
+		//	double n_log_n = A.length * (Math.log(A.length)/Math.log(2));
+		//	System.out.println("n = "+ A.length 
+		//			+ ". Calls to partition = " + callsToPartition 
+		//			+ ". Elements visisted = " + elementsVisited
+		//			+ ". n*log(n) = " + n_log_n
+		//			+ ". ((n^2)/2)-n = " + ( ((long)(Math.pow(A.length, 2)/4)) - A.length) ) ;
 		System.out.println("==================");
+	}
+	public static class ResultCounts {
+		int n, callsToPartition, elementsVisited;
+		double n_log_n, halfNsqaredMinusN;
+		public ResultCounts(int n, int calls, int visits) {
+			this.n = n;
+			this.callsToPartition = calls;
+			this.elementsVisited = visits;
+			this.n_log_n = n * (Math.log(n)/Math.log(2));
+			this.halfNsqaredMinusN = ( ((long)(Math.pow(n, 2)/4)) - n) ;
+		}
+		@Override
+		public String toString() {
+			return "n = "+ n 
+					+ ". Calls to partition = " + callsToPartition 
+					+ ". Elements visisted = " + elementsVisited
+					+ ". n*log(n) = " + n_log_n
+					+ ". ((n^2)/2)-n = " + halfNsqaredMinusN ;
+		}
 	}
 	
 	public static int[] makeRandomIntArray(int size){
@@ -111,6 +138,9 @@ public class QuickSort {
 		}
 		return true;
 	}
+	public void testAverage(int numRuns, PivotLocation pl){
+		
+	}
 	public static void main(String[] args) {
 		//for( int ii=0; ii < 10 ; ii++) System.out.println(getRandomPivot(0, 100));
 		
@@ -125,5 +155,13 @@ public class QuickSort {
 		A = makeRandomIntArray(100);
 		qs.doQuickSort( A );
 		
+		
+		qs.doQuickSort(makeRandomIntArray(20), PivotLocation.MEDIAN);
+		qs.doQuickSort(makeRandomIntArray(20), PivotLocation.MEDIAN);
+		
+		qs.doQuickSort(makeRandomIntArray(20), PivotLocation.RANDOM);
+		qs.doQuickSort(makeRandomIntArray(20), PivotLocation.RANDOM);
+		
+		qs.doQuickSort(A); // already sorted
 	}
 }
