@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class AdjacentyListGraph {
+public class AdjacencyListGraph {
 	
 	private Map<Integer, Vertex> vertices = new HashMap<Integer, Vertex>();
 	private List<Edge>   edges    = new ArrayList<Edge>();
@@ -166,8 +166,8 @@ public class AdjacentyListGraph {
 		return sb.toString();
 	}
 	
-	public static AdjacentyListGraph makeRandomGraph(int vertexSize){
-		AdjacentyListGraph G = new AdjacentyListGraph();
+	public static AdjacencyListGraph makeRandomGraph(int vertexSize){
+		AdjacencyListGraph G = new AdjacencyListGraph();
 		for( int ii =0; ii< vertexSize ; ii++){
 			G.addVertex();
 		}
@@ -183,7 +183,7 @@ public class AdjacentyListGraph {
 	}
 	
 	public static void main(String[] args) {
-		AdjacentyListGraph G = makeRandomGraph(10);
+		AdjacencyListGraph G = makeRandomGraph(10);
 		System.out.println(G);
 	}
 }
