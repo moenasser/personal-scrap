@@ -1,6 +1,7 @@
 package com.mnasser.graph;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ public class AdjacencyListGraph extends Graph{
 	private Map<Integer,Vertex> _vertmap = new HashMap<Integer,Vertex>();
 
 	@Override public List<Edge> getEdges() {return edges;}
-	@Override public List<Vertex> getVertices() { return vertices; }
+	@Override public List<Vertex> getVertices() { Collections.sort(vertices); return vertices; }
 	
 	
 	void addVertex(){
@@ -38,9 +39,12 @@ public class AdjacencyListGraph extends Graph{
 	}
 	public void addEdge(Vertex a, Vertex b){
 		Edge e = new Edge(a,b);
+		addEdge(e);
+		/*
 		a.edges.add(e);
 		b.edges.add(e);
 		edges.add(e);
+		*/
 	}
 	public void addEdge(Edge e){
 		addVertex(e.head);

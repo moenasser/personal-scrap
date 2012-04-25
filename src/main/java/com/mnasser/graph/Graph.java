@@ -1,8 +1,7 @@
 package com.mnasser.graph;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public abstract class Graph {
 	
@@ -33,12 +32,12 @@ public abstract class Graph {
 	}
 	
 
-	public static class Vertex {
+	public static class Vertex implements Comparable<Vertex> {
 		public final int id;
-		public Set<Edge> edges;
+		public List<Edge> edges;
 		public Vertex(int id) {
 			this.id = id;
-			this.edges = new HashSet<Edge>();
+			this.edges = new ArrayList<Edge>();
 		}
 		Edge getEdge(Vertex b){
 			for( Edge e : edges ){
@@ -64,6 +63,10 @@ public abstract class Graph {
 			StringBuilder sb = new StringBuilder();
 			sb.append(id).append(" -> [");
 			for( Edge e : edges ){
+				Vertex o = e.otherSide(this);
+				if( o == null ){
+					throw new RuntimeException("@ vert :" + this + " on Edge "+ e);
+				}
 				sb.append(e.otherSide(this).id)
 				  .append(',');
 			}
@@ -87,6 +90,10 @@ public abstract class Graph {
 			if (id != other.id)
 				return false;
 			return true;
+		}
+		@Override
+		public int compareTo(Vertex o) {
+			return Integer.valueOf(this.id).compareTo(o.id);
 		}
 	}
 	
@@ -154,8 +161,15 @@ public abstract class Graph {
 		  .append(". Total Edges = ").append(getEdges().size())
 		  .append(". Connected = " + isConnected())
 		  .append('\n');
-		for(Vertex v : getVertices()){
-			sb.append(v.toString()).append('\n');
+		Vertex _v = null;
+		try{
+			for(Vertex v : getVertices()){
+				_v = v;
+				sb.append(v.toString()).append('\n');
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println(_v);
 		}
 		return sb.toString();
 	}

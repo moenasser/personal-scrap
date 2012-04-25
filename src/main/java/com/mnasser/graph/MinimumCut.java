@@ -1,5 +1,9 @@
 package com.mnasser.graph;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +12,8 @@ import com.mnasser.graph.Graph.Vertex;
 
 public class MinimumCut {
 
-	public static void main(String[] args) {
-		Graph G = AdjacencyListGraph.makeRandomGraph(10);
+	public static void main(String[] args) throws IOException {
+		Graph G = AdjacencyListGraph.makeRandomGraph(5);
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
 		
@@ -19,6 +23,11 @@ public class MinimumCut {
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
 
+		G.addEdge(e);
+		G.addEdge(e);
+		G.addEdge(e);
+		System.out.println(G.toMatrixString());
+		System.out.println(G);
 		
 		Vertex v = chooseRandomVertex(G);
 		System.out.println(v);
@@ -28,7 +37,7 @@ public class MinimumCut {
 		
 		
 		System.out.println("Contracting edge TEST ==========");
-		G = AdjacencyListGraph.makeRandomGraph(10);
+		G = AdjacencyListGraph.makeRandomGraph(5);
 		e = chooseRandomEdge(G);
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
@@ -39,9 +48,45 @@ public class MinimumCut {
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
 		
+		for( int ii =2; ii < G.getEdges().size(); ii++){
+			System.out.println("==========  " + ii + " ==========");
+			e = chooseRandomEdge(G);
+			contractEdge(G, e);
+			System.out.println("Contracting edge " + e);
+			
+			System.out.println(G.toMatrixString());
+			System.out.println(G);
+		}
+
 		
+		Graph g = AdjacencyListGraph.makeRandomGraph(8);
+		System.out.println("============== Calling minimumCut() on");
+		System.out.println(g.toMatrixString());
+		System.out.println(g);
+		findMinimumCut(g);
 		
+
+		Graph K = loadGraph("/home/mnasser/workspace/personal-scrap/src/main/resources/kargerAdj.txt");
+		System.out.println("Karver graph = \n"+K.toMatrixString());
+		//System.out.println(K);
+		findMinimumCut(K);
 	}
+	
+	
+	static void findMinimumCut(Graph g){
+		System.out.println("============== Finding minimum cut ");
+		while( g.getVertices().size() > 2 ){
+			Edge e = chooseRandomEdge(g);
+			System.out.println("Contracting edge " + e);
+			contractEdge(g, e);
+			
+			System.out.println(g.toMatrixString());
+			System.out.println(g);
+		}
+		System.out.println("========\nMinimum Edges left = " + g.getEdges().size());
+		System.out.println("========");
+	}
+	
 	
 	static Edge chooseRandomEdge(Graph g){
 		int esize = g.getEdges().size();
@@ -85,6 +130,23 @@ public class MinimumCut {
 				g.addEdge(f2);
 			}
 		}
+	}
+	
+	public static Graph loadGraph(String file) throws IOException{
+		File f = new File(file);
+		BufferedReader br = new BufferedReader(new FileReader(f));
+		String line = null;
+		Graph g = new AdjacencyListGraph();
+		while( (line=br.readLine())!=null){
+			String[] verts = line.trim().split("\\s+");
+			Vertex a = new Vertex(Integer.parseInt(verts[0]));
+			g.addVertex(a);
+			for( int ii = 1; ii <verts.length; ii++){
+				Vertex b = new Vertex(Integer.parseInt(verts[ii]));
+				g.addEdge( new Edge( a, b ));
+			}
+		}
+		return g;
 	}
 	
 }
