@@ -90,6 +90,7 @@ public class MinimumCut {
 	
 	static Edge chooseRandomEdge(Graph g){
 		int esize = g.getEdges().size();
+		if( esize == 0 ) return null;
 		int idx = (int)(Math.random() * esize) % esize;
 		return g.getEdges().get(idx);
 	}

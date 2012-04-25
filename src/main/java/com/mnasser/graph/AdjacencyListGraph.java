@@ -126,14 +126,11 @@ public class AdjacencyListGraph extends Graph{
 		for( int ii =0; ii< vertexSize ; ii++){
 			G.addVertex();
 		}
-		for( int ii = 0;  ! G.isConnected();  ){
-			//int a = ( (int)(Math.random()*vertexSize) % vertexSize );
-			//int b = ( (int)(Math.random()*vertexSize) % vertexSize) + 1;
+		while ( ! G.isConnected() ){
 			Vertex a = G.getVertices().get( ((int)(Math.random()*vertexSize) % vertexSize) );
 			Vertex b = G.getVertices().get( ((int)(Math.random()*vertexSize) % vertexSize) );
 			if( a != b  && ! G.hasEdge( a, b )  ){
 				G.addEdge(  new Edge( a, b )  );
-				ii ++;
 			}
 		}
 		return G;

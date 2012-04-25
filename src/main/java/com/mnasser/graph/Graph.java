@@ -91,7 +91,6 @@ public abstract class Graph {
 				return false;
 			return true;
 		}
-		@Override
 		public int compareTo(Vertex o) {
 			return Integer.valueOf(this.id).compareTo(o.id);
 		}
