@@ -28,13 +28,17 @@ public class AdjacencyListGraph extends Graph{
 		}
 	}
 	public void addVertex(Vertex v){
-		if( _vertmap.containsKey(v.id) ){
-			Vertex v1 = _vertmap.get(v.id);
-			if( v1 != v )
-				v1.edges.addAll(v.edges);
-		}else{
-			vertices.add(v);
-			_vertmap.put(v.id, v);
+		if( ! _vertmap.containsKey(v.id) ){
+			/*
+				Vertex v1 = _vertmap.get(v.id);
+				if( v1 != v )
+					v1.edges.addAll(v.edges);
+				}else{
+			*/
+			Vertex v1 = new Vertex(v.id); // clone it
+			//v1.edges.addAll(v.edges);
+			vertices.add(v1);
+			_vertmap.put(v1.id, v1);
 		}
 	}
 	public void addEdge(Vertex a, Vertex b){
@@ -49,9 +53,12 @@ public class AdjacencyListGraph extends Graph{
 	public void addEdge(Edge e){
 		addVertex(e.head);
 		addVertex(e.tail);
-		e.head.edges.add(e);
-		e.tail.edges.add(e);
-		edges.add(e);
+		Vertex a = getVertex(e.head); 
+		Vertex b = getVertex(e.tail);
+		Edge e1 = new Edge( a, b );
+		a.edges.add(e1);
+		b.edges.add(e1);
+		edges.add( e1 );
 	}
 	public boolean hasEdge(Edge e){
 		return  edges.contains(e);

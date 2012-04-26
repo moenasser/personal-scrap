@@ -31,20 +31,36 @@ public abstract class Graph {
 		return ++ _ids;
 	}
 	
+	public static Graph copyOf(Graph g){
+		Graph q = new AdjacencyListGraph();
+		for( Edge e : g.getEdges() ){
+			q.addEdge(e);
+		}
+		return q;
+	}
 
 	public static class Vertex implements Comparable<Vertex> {
 		public final int id;
-		public List<Edge> edges;
+		protected List<Edge> edges;
 		public Vertex(int id) {
 			this.id = id;
 			this.edges = new ArrayList<Edge>();
 		}
-		Edge getEdge(Vertex b){
+		public Edge getEdge(Vertex b){
 			for( Edge e : edges ){
 				if( b.equals( e.otherSide(this)) )
 					return e;
 			}
 			return null;
+		}
+		public Vertex getNeighbor(Edge e){
+			if( hasEdge(e) ){
+				return e.otherSide(this);
+			}
+			return null;
+		}
+		boolean hasEdge(Edge e){
+			return edges.contains(e);
 		}
 		void removeEdge(Edge e){
 			if( edges.contains(e) ){
@@ -57,6 +73,15 @@ public abstract class Graph {
 					return true;
 			}
 			return false;
+		}
+		int numEdges(Vertex b ){
+			if( b == null )	return 0; 
+			int ii = 0;
+			for(Edge e : edges){
+				if( e.otherSide(this).equals(b) ) 
+					ii ++;
+			}
+			return ii;
 		}
 		@Override
 		public String toString() {
@@ -100,19 +125,28 @@ public abstract class Graph {
 	public static class Edge   {
 		final Vertex head, tail;
 		public Edge(Vertex a, Vertex b) {
+			if( a == null || b == null )
+				throw new RuntimeException("Can't have null vertices in and edge : ("
+						+((a==null)?"null":a.id) +','+((b==null)?"null":b.id) );
 			this.head = a;
 			this.tail = b;
 		}
 		/**Vertices use this to get what's on the other side of the edge*/
 		public Vertex otherSide(Vertex head){
-			if( this.head == head )
+			if( this.head.equals(head) )
 				return this.tail;
-			if( this.tail == head )
+			if( this.tail.equals(head) )
 				return this.head;
 			return null;
 		}
+		public boolean isIncidentOn( Vertex a ){
+			return  head.equals(a) || tail.equals(a);
+		}
 		public String toString(){
 			return "("+head.id +","+tail.id+")";
+		}
+		public boolean isSelfLoop(){
+			return head.equals(tail);
 		}
 		@Override
 		public int hashCode() {
@@ -131,9 +165,11 @@ public abstract class Graph {
 			if (getClass() != obj.getClass())
 				return false;
 			Edge other = (Edge) obj;
-			if( head == other.head || head == other.tail ){
-				if( tail == other.tail || tail == other.head )
-					return true;
+			if( head.equals(other.head) ){
+				return tail.equals(other.tail);
+			}
+			if( head.equals(other.tail) ){
+				return tail.equals(other.head);
 			}
 			return false;
 			/*
@@ -153,13 +189,9 @@ public abstract class Graph {
 		
 	}
 	
-	@Override
-	public String toString() {
+	public String toAdjListString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Total Vertices = ").append(getVertices().size())
-		  .append(". Total Edges = ").append(getEdges().size())
-		  .append(". Connected = " + isConnected())
-		  .append('\n');
+		sb.append(toInfoLine());
 		Vertex _v = null;
 		try{
 			for(Vertex v : getVertices()){
@@ -173,22 +205,27 @@ public abstract class Graph {
 		return sb.toString();
 	}
 	
-	public String toMatrixString() {
+	@Override
+	public String toString(){
+		return toMatrixString() +  toAdjListString();
+	}
+	private String toInfoLine(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("Total Vertices = ").append(getVertices().size())
 		  .append(". Total Edges = ").append(getEdges().size())
 		  .append(". Connected = " + isConnected())
 		  .append('\n');
-		sb.append("\t");
-		//for( int ii=0;ii<getVertices().size();ii++){
+		return sb.toString();
+	}
+	public String toMatrixString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(toInfoLine());
 		for( Vertex v : getVertices() ){
 			sb.append("  ").append(v.id).append(' ');
 		}
 		sb.append("\n");
-		//for( int ii=0; ii< getVertices().size();ii++){
 		for( Vertex ii : getVertices() ){
 			sb.append(ii.id + " :\t|");
-			//for( int jj=0; jj< getVertices().size();jj++){
 			for( Vertex jj : getVertices() ){
 				sb.append(' ');
 				if( hasEdge(ii, jj) ){

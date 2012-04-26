@@ -59,38 +59,56 @@ public class MinimumCut {
 		}
 
 		
-		Graph g = AdjacencyListGraph.makeRandomGraph(8);
-		System.out.println("============== Calling minimumCut() on");
-		System.out.println(g.toMatrixString());
-		System.out.println(g);
-		findMinimumCut(g);
-		
 
 		Graph K = loadGraph("/home/mnasser/workspace/personal-scrap/src/main/resources/kargerAdj.txt");
 		System.out.println("Karver graph = \n"+K.toMatrixString());
-		//System.out.println(K);
+		System.out.println(K);
 		findMinimumCut(K);
+		
+		K = loadGraph("/home/mnasser/workspace/personal-scrap/src/main/resources/kargerAdj.txt");
+		int lowestMinSeen = Integer.MAX_VALUE;
+		for( int ii = 0; ii < 10; ii ++ ){
+			int min = repeatFindMinimumCut(K, 10000);
+			if( min < lowestMinSeen )
+				lowestMinSeen = min;
+		    System.out.println("Lowest min seen so far " + min);
+		}
+		System.out.println("Lowest minimum seen was = " + lowestMinSeen);
 	}
 	
+	static int repeatFindMinimumCut(Graph g, int reps){
+		int minCut = Integer.MAX_VALUE;
+		Graph minG = null;
+		for( int ii = 0; ii < reps; ii++ ){
+			Graph h = Graph.copyOf(g);
+			int min = findMinimumCut(h);
+			if( min < minCut){
+				minCut = min;
+				minG = h;
+			}
+		}
+		return minCut;
+	}
 	
-	static void findMinimumCut(Graph g){
-		System.out.println("============== Finding minimum cut ");
+	static int findMinimumCut(Graph g){
+		//System.out.println("========== Finding minimum cut ");
 		while( g.getVertices().size() > 2 ){
 			Edge e = chooseRandomEdge(g);
-			System.out.println("Contracting edge " + e);
+			//System.out.println("Contracting edge " + e);
 			contractEdge(g, e);
-			
-			System.out.println(g.toMatrixString());
-			System.out.println(g);
+			if( g.getVertices().size() == 3 || g.getVertices().size() == 4 ){
+				g.toMatrixString();
+			}
+			//System.out.println(g);
 		}
-		System.out.println("========\nMinimum Edges left = " + g.getEdges().size());
-		System.out.println("========");
+		//System.out.println("Minimum Edges left = " + g.getEdges().size());
+		return g.getEdges().size();
 	}
 	
 	
 	static Edge chooseRandomEdge(Graph g){
 		int esize = g.getEdges().size();
-		if( esize == 0 ) return null;
+		if( esize == 0 ) throw new RuntimeException("Attempt to choose an edge from graph w/ no edges!");//return null;
 		int idx = (int)(Math.random() * esize) % esize;
 		return g.getEdges().get(idx);
 	}
@@ -105,16 +123,31 @@ public class MinimumCut {
 		// grab all other edges from vertex a and vertex b.
 		// create a new vertex c with all the remaining edges of a & b
 		// delete self loops.
-		Vertex a = e.head; // hold references for later use
-		Vertex b = e.tail;
-		
+		Vertex a = g.getVertex(e.head); // hold references for later use
+		Vertex b = g.getVertex(e.tail);
+
 		List<Edge> allEdges = new ArrayList<Edge>();
-		allEdges.addAll(e.head.edges);
-		allEdges.addAll(e.tail.edges);
+		allEdges.addAll(a.edges);
+		for( Edge _b : b.edges ){
+			if( ! _b.isIncidentOn(a) )
+				allEdges.add( _b );
+		}
+		/*
+		Map<Edge, Integer> allEdges = new HashMap<Edge, Integer>();
+		for( Edge _a : a.edges ){
+			if( ! allEdges.containsKey( _a ) ) allEdges.put( _a, 1);
+			allEdges.put( _a , allEdges.get(_a) + 1 );
+		}
+		for( Edge _b : b.edges ){
+			if( _b.isIncidentOn(a) )
+			if( ! a.hasEdge(_e) )
+				allEdges.add( 
+		}
+		*/
 		
 		g.removeEdge(e); // prune this edge
 		
-		// New joined vertex
+		// Newly joined vertex
 		Vertex c = new Vertex( Math.min(a.id, b.id) );
 		
 		g.removeVertex(a); // get rid of nodes w/ their edges
@@ -124,8 +157,8 @@ public class MinimumCut {
 		
 		//now add back edges avoiding self loops 
 		for( Edge f : allEdges ){
-			Vertex h = (f.head == a)? c : (f.head == b )? c : f.head;
-			Vertex t = (f.tail == a)? c : (f.tail == b )? c : f.tail;
+			Vertex h = (f.head.equals(a))? c : (f.head.equals(b) )? c : f.head;
+			Vertex t = (f.tail.equals(a))? c : (f.tail.equals(b) )? c : f.tail;
 			if( ! h.equals(t) ){
 				Edge f2 = new Edge(h, t);
 				g.addEdge(f2);
@@ -144,7 +177,9 @@ public class MinimumCut {
 			g.addVertex(a);
 			for( int ii = 1; ii <verts.length; ii++){
 				Vertex b = new Vertex(Integer.parseInt(verts[ii]));
-				g.addEdge( new Edge( a, b ));
+				Edge e = new Edge( a, b );
+				if( ! g.hasEdge(e) )
+					g.addEdge( e );
 			}
 		}
 		return g;
