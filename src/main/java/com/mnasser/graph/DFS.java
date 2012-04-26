@@ -1,5 +1,8 @@
 package com.mnasser.graph;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Assert;
 
 import com.mnasser.graph.Graph.Edge;
@@ -38,15 +41,16 @@ public class DFS {
 	
 	//Stack<Vertex> stack = new Stack<Vertex>();
 	public static void traverseDFS(Vertex s ){
-		traverseDFS(s, null, false);
+		traverseDFS(s, null, false, new RunningTotal());
 	}
-	public static void traverseDFS(Vertex s, FinishingOrder bth, boolean reverse){
+	public static void traverseDFS(Vertex s, FinishingOrder bth, boolean reverse, RunningTotal rt){
 		s.visited = true;
+		rt.inc();
 		System.out.println( "visiting " + s ); //s + ((p==null)?"":" (from "+p.id+")" ));
 		int v = 0;
 		for( Edge e : (reverse)?s.getInBound():s.getOutBound() ){
-			if( ! e.dst.isVisited() ) {
-				traverseDFS( e.dst, bth, reverse );
+			if( ! ((reverse)? e.src.isVisited() : e.dst.isVisited()) ) {
+				traverseDFS( ((reverse)?e.src:e.dst), bth, reverse, rt );
 				v++;
 			}
 		}
@@ -56,12 +60,16 @@ public class DFS {
 		}
 	}
 	
-	public static class FinishingOrder {
+	public interface BackTrackHook{
+		public void doBackTrack(Vertex s);
+	}
+	public static class FinishingOrder implements BackTrackHook {
 		private int _order = 0;
-		private Vertex maxOrdered;
+		private List<Integer> ordering = new ArrayList<Integer>(); // this migt hurt
+		@Override
 		public void doBackTrack(Vertex s){
 			s.order = ++_order;
-			maxOrdered = s;
+			ordering.add(s.id);
 		}
 		@Override
 		public String toString() {
@@ -70,9 +78,19 @@ public class DFS {
 		int getCurrentOrder(){
 			return _order;
 		}
-		Vertex getMaxOrdered(){
-			return maxOrdered;
+		int getMaxOrdered(){
+			return ordering.get(ordering.size()-1);
 		}
-		
+		List<Integer> getOrdering(){
+			return this.ordering;
+		}
 	}
+	public static class RunningTotal {
+		private int size = 0;
+		public void inc(){
+			size ++;
+		}
+		int getSize(){return size;}
+	}
+
 }

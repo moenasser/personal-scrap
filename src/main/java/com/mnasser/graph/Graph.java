@@ -87,9 +87,6 @@ public abstract class Graph {
 			}
 			return ii;
 		}
-		List<Edge> getOutBound(boolean reversed){
-			return (reversed)?getInBound():getOutBound();
-		}
 		List<Edge> getOutBound(){
 			List<Edge> out = new ArrayList<Edge>();
 			for( Edge e : edges ){
@@ -183,6 +180,9 @@ public abstract class Graph {
 		}
 		public boolean isSelfLoop(){
 			return src.equals(dst);
+		}
+		public Edge reverse(){
+			return new Edge(dst, src);
 		}
 		@Override
 		public int hashCode() {

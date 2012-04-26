@@ -38,7 +38,8 @@ public class DirectedGraph extends AdjacencyListGraph{
 			a.order = -1;
 		}
 	}
-	
+
+	/*
 	void reverse(){
 		this.reversed = true;
 	}
@@ -49,6 +50,7 @@ public class DirectedGraph extends AdjacencyListGraph{
 		this.reversed = rev;
 	}
 	boolean isRevered(){ return this.reversed; }
+	*/
 	
 	/*
 	DirectedGraph reverseClone(){
