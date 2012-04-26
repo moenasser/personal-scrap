@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import com.mnasser.graph.Graph.Vertex;
 import com.mnasser.graph.StronglyConnectedComponents.CountingMap;
 
 public class SCC_SuperTest {
@@ -21,7 +20,7 @@ public class SCC_SuperTest {
 		long start = System.currentTimeMillis();
 		while( (line=br.readLine())!=null){
 			String[] verts = line.trim().split("\\s+");
-			g.addEdge( new Vertex(Integer.parseInt(verts[0])) , new Vertex(Integer.parseInt(verts[1])) );
+			g.addEdge( Integer.parseInt(verts[0]) , Integer.parseInt(verts[1]) );
 			cnt++;
 			if( cnt % 10000 == 0 ){
 				System.out.println("... " + cnt + " lines loaded ... ");

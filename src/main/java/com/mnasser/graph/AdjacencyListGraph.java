@@ -8,31 +8,42 @@ import java.util.Map;
 
 public class AdjacencyListGraph extends Graph{
 	
-	private List<Vertex> vertices = new ArrayList<Vertex>();
-	private List<Edge>   edges    = new ArrayList<Edge>();
-	private Map<Integer,Vertex> _vertmap = new HashMap<Integer,Vertex>();
+	public AdjacencyListGraph(int initialSize) {
+		vertices = new ArrayList<Vertex>(initialSize);	
+		edges = new ArrayList<Edge>(initialSize);
+		_vertmap = new HashMap<Integer,Vertex>(initialSize);
+	}
+	public AdjacencyListGraph() {
+		this(100);
+	}
+	
+	private List<Vertex> vertices = null; 
+	private List<Edge>   edges    = null; 
+	private Map<Integer,Vertex> _vertmap = null;
 
 	@Override public List<Edge> getEdges() {return edges;}
 	@Override public List<Vertex> getVertices() { Collections.sort(vertices); return vertices; }
 	
 	
-	void addVertex(){
+	Vertex addVertex(){
 		int id = makeAnId();
-		addVertex(id);
+		return addVertex(id);
 	}
-	void addVertex(int id){
+	Vertex addVertex(int id){
 		if( ! _vertmap.containsKey(id) ){
 			Vertex v = new Vertex(id);
-			addVertex(v);
+			return addVertex(v);
 		}
+		return _vertmap.get(id);
 	}
-	public void addVertex(Vertex v){
+	public Vertex addVertex(Vertex v){
 		if( ! _vertmap.containsKey(v.id) ){
 			Vertex v1 = new Vertex(v.id); // clone it
 			v1.directed = isDirected();
 			vertices.add(v1);
 			_vertmap.put(v1.id, v1);
 		}
+		return _vertmap.get(v.id);
 	}
 	public void addEdge(Vertex a, Vertex b){
 		Edge e = new Edge(a,b);
@@ -42,6 +53,14 @@ public class AdjacencyListGraph extends Graph{
 		b.edges.add(e);
 		edges.add(e);
 		*/
+	}
+	public void addEdge(int ia, int ib){
+		Vertex a = addVertex(ia);
+		Vertex b = addVertex(ib);
+		Edge e1 = new Edge( a, b );
+		a.edges.add(e1);
+		b.edges.add(e1);
+		edges.add( e1 );
 	}
 	public void addEdge(Edge e){
 		addVertex(e.src);

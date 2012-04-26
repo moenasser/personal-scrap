@@ -4,7 +4,7 @@ package com.mnasser.graph;
 
 public class DirectedGraph extends AdjacencyListGraph{
 
-	private boolean reversed = false;
+	//private boolean reversed = false;
 	private Vertex max = null;
 	private Vertex min = null;
 	
@@ -18,10 +18,11 @@ public class DirectedGraph extends AdjacencyListGraph{
 	}
 	
 	@Override
-	public void addVertex(Vertex v) {
-		super.addVertex(v);
+	public Vertex addVertex(Vertex v) {
+		Vertex v1 = super.addVertex(v);
 		max = (max == null)?v : (max.id < v.id)? v : max;
 		min = (min == null)?v : (min.id > v.id)? v : min;
+		return v1;
 	}
 	
 	Vertex getMax(){ return this.max; }

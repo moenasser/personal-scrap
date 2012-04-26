@@ -8,7 +8,7 @@ public abstract class Graph {
 	public abstract List<Vertex> getVertices();
 	public abstract List<Edge> getEdges();
 	
-	public abstract void addVertex(Vertex v);
+	public abstract Vertex addVertex(Vertex v);
 	public abstract void addEdge(Vertex a, Vertex b);
 	public abstract void addEdge(Edge e);
 	public abstract boolean hasVertex(Vertex a);
