@@ -29,15 +29,19 @@ public class StronglyConnectedComponents {
 		g.addEdge(  new Vertex(8) , new Vertex(5) );
 
 		System.out.println(g);
-
-		// First pass
-		//g.reverse();  // unforunately I inputed the reverse edges 
+		
+		CountingMap cm = doSCC(g); 
+		System.out.println(cm);
+	}
+	
+	public static CountingMap doSCC(DirectedGraph g){
+		// first pass
 		FinishingOrder fo = firstPass( g );
 		
 		g.clearVisited();
-		// Second Pass
 		
-		secondPass(g, fo);
+		// Second Pass
+		return secondPass(g, fo);
 	}
 	
 	public static FinishingOrder firstPass( DirectedGraph g){
@@ -49,14 +53,14 @@ public class StronglyConnectedComponents {
 			if(  g.hasVertex(ii) && ! g.getVertex(ii).isVisited()){
 				RunningTotal rt = new RunningTotal();
 				DFS.traverseDFS(g.getVertex(ii), fo, true , rt);
-				System.out.println("Size = " + rt.getSize());
+				//System.out.println("Size = " + rt.getSize());
 			}
 		}
-		System.out.println(g);
+		//System.out.println(g);
 		return fo;
 	}
 	
-	public static void secondPass( DirectedGraph g, FinishingOrder fo ){
+	public static CountingMap secondPass( DirectedGraph g, FinishingOrder fo ){
 		g.clearVisited();
 		List<Integer> ordering = fo.getOrdering();
 		Collections.reverse(ordering); // reverse in place 
@@ -73,7 +77,7 @@ public class StronglyConnectedComponents {
 			DFS.traverseDFS( leader , null, false  , rt);
 			countingMap.inc(rt.getSize());
 		}
-		System.out.println(countingMap);
+		return countingMap;
 	}
 	
 	public static class CountingMap extends TreeMap<Integer,Integer>{

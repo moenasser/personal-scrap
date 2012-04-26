@@ -46,7 +46,7 @@ public class DFS {
 	public static void traverseDFS(Vertex s, FinishingOrder bth, boolean reverse, RunningTotal rt){
 		s.visited = true;
 		rt.inc();
-		System.out.println( "visiting " + s ); //s + ((p==null)?"":" (from "+p.id+")" ));
+		//System.out.println( "visiting " + s ); //s + ((p==null)?"":" (from "+p.id+")" ));
 		int v = 0;
 		for( Edge e : (reverse)?s.getInBound():s.getOutBound() ){
 			if( ! ((reverse)? e.src.isVisited() : e.dst.isVisited()) ) {
@@ -56,7 +56,7 @@ public class DFS {
 		}
 		if( bth != null && s.order == -1 )  {
 			bth.doBackTrack( s );
-			System.out.println("Backtracking. "+s.id+" is #"+ ((bth!=null)?s.order:"")+")");
+			//System.out.println("Backtracking. "+s.id+" is #"+ ((bth!=null)?s.order:"")+")");
 		}
 	}
 	
