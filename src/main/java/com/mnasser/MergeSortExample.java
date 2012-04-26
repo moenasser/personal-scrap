@@ -15,8 +15,10 @@ public class MergeSortExample {
 		L[n1+1] = null;
 		R[n2+1] = null;
 		
+		/*
 		int ii = 0;
 		int jj = 0;
+		*/
 		
 		for( int kk = 0; kk < r; kk++){
 			

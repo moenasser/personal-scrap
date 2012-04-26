@@ -1,7 +1,5 @@
 package com.mnasser.graph;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +25,7 @@ public class MinimumCutsTest {
 		for( Edge e : G.getEdges()) 
 			edgeCounter.put(e, 0);
 		for( int ii = 0; ii < 10000; ii ++){
-			Edge e = MinimumCut.chooseRandomEdge(G);
+			Edge e = Graph.chooseRandomEdge(G);
 			if(!edgeCounter.containsKey(e))edgeCounter.put(e, 0);
 			edgeCounter.put(e, edgeCounter.get(e)+1);
 		}
@@ -54,21 +52,21 @@ public class MinimumCutsTest {
 	public void testRemoveRandomEdge() throws Exception {
 		Graph g = AdjacencyListGraph.makeRandomGraph(5);
 		
-		Edge e = MinimumCut.chooseRandomEdge(g);
+		Edge e = Graph.chooseRandomEdge(g);
 		Assert.assertTrue( g.hasEdge(e) );
 		
 		g.removeEdge(e);
 		
 		Assert.assertFalse( g.hasEdge(e) );
-		Assert.assertFalse( e.head.hasEdge(e) );
-		Assert.assertFalse( e.tail.hasEdge(e) );
+		Assert.assertFalse( e.src.hasEdge(e) );
+		Assert.assertFalse( e.dst.hasEdge(e) );
 	}
 	
 	@Test
 	public void testRemoveRandomVertex() throws Exception {
 		Graph g = AdjacencyListGraph.makeRandomGraph(5);
 		
-		Vertex a = MinimumCut.chooseRandomVertex(g);
+		Vertex a = Graph.chooseRandomVertex(g);
 		Assert.assertTrue(g.hasVertex(a));
 		
 		List<Vertex> neighbors = new ArrayList<Vertex>();
@@ -104,8 +102,8 @@ public class MinimumCutsTest {
 		MinimumCut.contractEdge(g, e);
 		
 		Assert.assertFalse( g.hasEdge(e) );
-		int min = Math.min( e.head.id, e.tail.id);
-		int max = Math.max( e.head.id, e.tail.id);
+		int min = Math.min( e.src.id, e.dst.id);
+		int max = Math.max( e.src.id, e.dst.id);
 		Assert.assertFalse( g.hasVertex( new Vertex(max)) );
 		Assert.assertTrue( g.hasVertex( new Vertex(min)) );
 		

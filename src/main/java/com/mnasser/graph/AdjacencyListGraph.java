@@ -23,20 +23,13 @@ public class AdjacencyListGraph extends Graph{
 	void addVertex(int id){
 		if( ! _vertmap.containsKey(id) ){
 			Vertex v = new Vertex(id);
-			vertices.add(v);
-			_vertmap.put(id, v);
+			addVertex(v);
 		}
 	}
 	public void addVertex(Vertex v){
 		if( ! _vertmap.containsKey(v.id) ){
-			/*
-				Vertex v1 = _vertmap.get(v.id);
-				if( v1 != v )
-					v1.edges.addAll(v.edges);
-				}else{
-			*/
 			Vertex v1 = new Vertex(v.id); // clone it
-			//v1.edges.addAll(v.edges);
+			v1.directed = isDirected();
 			vertices.add(v1);
 			_vertmap.put(v1.id, v1);
 		}
@@ -51,10 +44,10 @@ public class AdjacencyListGraph extends Graph{
 		*/
 	}
 	public void addEdge(Edge e){
-		addVertex(e.head);
-		addVertex(e.tail);
-		Vertex a = getVertex(e.head); 
-		Vertex b = getVertex(e.tail);
+		addVertex(e.src);
+		addVertex(e.dst);
+		Vertex a = getVertex(e.src); 
+		Vertex b = getVertex(e.dst);
 		Edge e1 = new Edge( a, b );
 		a.edges.add(e1);
 		b.edges.add(e1);
@@ -108,8 +101,8 @@ public class AdjacencyListGraph extends Graph{
 
 	public void removeEdge(Edge e){
 		if(hasEdge(e)){
-			e.head.removeEdge(e);
-			e.tail.removeEdge(e);
+			e.src.removeEdge(e);
+			e.dst.removeEdge(e);
 			edges.remove(e);
 		}
 	}

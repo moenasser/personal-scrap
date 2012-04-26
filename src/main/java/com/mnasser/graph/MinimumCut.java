@@ -17,7 +17,7 @@ public class MinimumCut {
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
 		
-		Edge e = chooseRandomEdge(G);
+		Edge e = Graph.chooseRandomEdge(G);
 		System.out.println(e);
 		G.removeEdge(e);
 		System.out.println(G.toMatrixString());
@@ -29,7 +29,7 @@ public class MinimumCut {
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
 		
-		Vertex v = chooseRandomVertex(G);
+		Vertex v = Graph.chooseRandomVertex(G);
 		System.out.println(v);
 		G.removeVertex(v);
 		System.out.println(G.toMatrixString());
@@ -38,7 +38,7 @@ public class MinimumCut {
 		
 		System.out.println("Contracting edge TEST ==========");
 		G = AdjacencyListGraph.makeRandomGraph(5);
-		e = chooseRandomEdge(G);
+		e = Graph.chooseRandomEdge(G);
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
 		System.out.println("Contracting edge " + e +" ... ");
@@ -50,7 +50,7 @@ public class MinimumCut {
 		
 		for( int ii =2; ii < G.getEdges().size(); ii++){
 			System.out.println("==========  " + ii + " ==========");
-			e = chooseRandomEdge(G);
+			e = Graph.chooseRandomEdge(G);
 			contractEdge(G, e);
 			System.out.println("Contracting edge " + e);
 			
@@ -78,13 +78,11 @@ public class MinimumCut {
 	
 	static int repeatFindMinimumCut(Graph g, int reps){
 		int minCut = Integer.MAX_VALUE;
-		Graph minG = null;
 		for( int ii = 0; ii < reps; ii++ ){
 			Graph h = Graph.copyOf(g);
 			int min = findMinimumCut(h);
 			if( min < minCut){
 				minCut = min;
-				minG = h;
 			}
 		}
 		return minCut;
@@ -93,7 +91,7 @@ public class MinimumCut {
 	static int findMinimumCut(Graph g){
 		//System.out.println("========== Finding minimum cut ");
 		while( g.getVertices().size() > 2 ){
-			Edge e = chooseRandomEdge(g);
+			Edge e = Graph.chooseRandomEdge(g);
 			//System.out.println("Contracting edge " + e);
 			contractEdge(g, e);
 			if( g.getVertices().size() == 3 || g.getVertices().size() == 4 ){
@@ -106,25 +104,13 @@ public class MinimumCut {
 	}
 	
 	
-	static Edge chooseRandomEdge(Graph g){
-		int esize = g.getEdges().size();
-		if( esize == 0 ) throw new RuntimeException("Attempt to choose an edge from graph w/ no edges!");//return null;
-		int idx = (int)(Math.random() * esize) % esize;
-		return g.getEdges().get(idx);
-	}
-	static Vertex chooseRandomVertex(Graph g){
-		int esize = g.getVertices().size();
-		int idx = (int)(Math.random() * esize) % esize;
-		return g.getVertices().get(idx);
-	}
-	
 	static void contractEdge(Graph g, Edge e){
 		if( ! g.hasEdge(e) ) throw new RuntimeException("Graph does not have edge "+e);
 		// grab all other edges from vertex a and vertex b.
 		// create a new vertex c with all the remaining edges of a & b
 		// delete self loops.
-		Vertex a = g.getVertex(e.head); // hold references for later use
-		Vertex b = g.getVertex(e.tail);
+		Vertex a = g.getVertex(e.src); // hold references for later use
+		Vertex b = g.getVertex(e.dst);
 
 		List<Edge> allEdges = new ArrayList<Edge>();
 		allEdges.addAll(a.edges);
@@ -157,8 +143,8 @@ public class MinimumCut {
 		
 		//now add back edges avoiding self loops 
 		for( Edge f : allEdges ){
-			Vertex h = (f.head.equals(a))? c : (f.head.equals(b) )? c : f.head;
-			Vertex t = (f.tail.equals(a))? c : (f.tail.equals(b) )? c : f.tail;
+			Vertex h = (f.src.equals(a))? c : (f.src.equals(b) )? c : f.src;
+			Vertex t = (f.dst.equals(a))? c : (f.dst.equals(b) )? c : f.dst;
 			if( ! h.equals(t) ){
 				Edge f2 = new Edge(h, t);
 				g.addEdge(f2);

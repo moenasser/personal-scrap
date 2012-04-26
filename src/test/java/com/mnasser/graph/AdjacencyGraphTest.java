@@ -1,6 +1,5 @@
 package com.mnasser.graph;
 
-import static org.junit.Assert.*;
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -86,8 +85,8 @@ public class AdjacencyGraphTest {
 		Assert.assertEquals( a , e.otherSide( b ) );
 		Assert.assertNull( e.otherSide( new Vertex(3) ) );
 		Assert.assertFalse(e.isSelfLoop());
-		Assert.assertNotNull(e.head);
-		Assert.assertNotNull(e.tail);
+		Assert.assertNotNull(e.src);
+		Assert.assertNotNull(e.dst);
 		
 		Edge e2 = new Edge( a, a );
 		Assert.assertTrue(e2.isSelfLoop());
