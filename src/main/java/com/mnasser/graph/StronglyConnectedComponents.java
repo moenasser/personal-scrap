@@ -4,10 +4,12 @@ package com.mnasser.graph;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 import java.util.TreeMap;
 
 import com.mnasser.graph.DFS.FinishingOrder;
 import com.mnasser.graph.DFS.RunningTotal;
+import com.mnasser.graph.Graph.Edge;
 import com.mnasser.graph.Graph.Vertex;
 
 
@@ -28,9 +30,10 @@ public class StronglyConnectedComponents {
 		g.addEdge(  new Vertex(5) , new Vertex(2) );
 		g.addEdge(  new Vertex(8) , new Vertex(5) );
 
-		System.out.println(g);
 		
 		CountingMap cm = doSCC(g); 
+		System.out.println(g);
+		
 		System.out.println(cm);
 	}
 	
@@ -46,14 +49,31 @@ public class StronglyConnectedComponents {
 	
 	public static FinishingOrder firstPass( DirectedGraph g){
 		g.clearVisited();
-		Vertex max = g.getMax();
+		Vertex max = g.getVertex(g.getMax().id);
 		FinishingOrder fo = new FinishingOrder();
 		
-		for( int ii = max.id ; ii > 0; ii-- ){
-			if(  g.hasVertex(ii) && ! g.getVertex(ii).isVisited()){
-				RunningTotal rt = new RunningTotal();
-				DFS.traverseDFS(g.getVertex(ii), fo, true , rt);
-				//System.out.println("Size = " + rt.getSize());
+		
+		Stack<Vertex> stack = new Stack<Vertex>();
+		for( int ii = max.id; ii >=0; ii-- ){
+			if( ! g.hasVertex(ii) ||  g.getVertex(ii).isVisited() )
+				continue;
+			
+			stack.push(g.getVertex(ii));
+			while( ! stack.isEmpty() ){
+				Vertex s = stack.peek();
+				if ( ! s.visited ){
+					s.visited = true;
+					
+					for( Edge e : s.getInBound() ){
+						if( ! e.src.isVisited() ) 
+							stack.push( e.src );
+					}
+				}else{
+					s = stack.pop();
+					if( fo != null && s.order == -1 )  {
+						fo.doBackTrack(s);
+					}
+				}
 			}
 		}
 		//System.out.println(g);
@@ -63,11 +83,12 @@ public class StronglyConnectedComponents {
 	public static CountingMap secondPass( DirectedGraph g, FinishingOrder fo ){
 		g.clearVisited();
 		List<Integer> ordering = fo.getOrdering();
+		
 		Collections.reverse(ordering); // reverse in place 
 		
 		CountingMap countingMap = new CountingMap();
 		
-		//for( int ii = ordering.size() - 1; ii >= 0; ii--){
+		/*
 		for( Integer ii : ordering ){
 			Vertex leader = g.getVertex( ii );
 			if( leader.isVisited() )
@@ -77,6 +98,33 @@ public class StronglyConnectedComponents {
 			DFS.traverseDFS( leader , null, false  , rt);
 			countingMap.inc(rt.getSize());
 		}
+		*/
+		
+		Stack<Vertex> stack = new Stack<Vertex>();
+		for( Integer ii : ordering ){
+			if( ! g.hasVertex(ii) ||  g.getVertex(ii).isVisited() )
+				continue;
+			
+			RunningTotal rt = new RunningTotal();
+			stack.push(g.getVertex(ii));
+			while( ! stack.isEmpty() ){
+				Vertex s = stack.peek();
+				if ( ! s.visited ){
+					s.visited = true;
+					rt.inc();
+					
+					for( Edge e : s.getOutBound() ){
+						if( ! e.dst.isVisited() ) {
+							stack.push( e.dst );
+						}
+					}
+				}else{
+					s = stack.pop();
+				}
+			}
+			countingMap.inc(rt.getSize());
+		}
+		
 		return countingMap;
 	}
 	

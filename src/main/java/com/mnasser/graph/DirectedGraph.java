@@ -8,6 +8,14 @@ public class DirectedGraph extends AdjacencyListGraph{
 	private Vertex max = null;
 	private Vertex min = null;
 	
+
+	public DirectedGraph() {
+		super();
+	}
+	public DirectedGraph(int i) {
+		super(i);
+	}
+
 	@Override public boolean isDirected() { return true;}
 	
 	@Override

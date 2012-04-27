@@ -2,6 +2,7 @@ package com.mnasser.graph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import junit.framework.Assert;
 
@@ -39,7 +40,8 @@ public class DFS {
 		}
 	}
 	
-	//Stack<Vertex> stack = new Stack<Vertex>();
+	Stack<Vertex> stack = new Stack<Vertex>();
+	
 	public static void traverseDFS(Vertex s ){
 		traverseDFS(s, null, false, new RunningTotal());
 	}

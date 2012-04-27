@@ -21,7 +21,7 @@ public class QuickSort {
 		int mid   = A[midIdx];
 		int right = A[rightIdx];
 		
-		System.out.println("A.length = "+(end-start+1)+"; A["+leftIdx+"]="+A[leftIdx]+"; A["+midIdx+"]="+A[midIdx]+"; A["+rightIdx+"]="+A[rightIdx]);
+		//System.out.println("A.length = "+(end-start+1)+"; A["+leftIdx+"]="+A[leftIdx]+"; A["+midIdx+"]="+A[midIdx]+"; A["+rightIdx+"]="+A[rightIdx]);
 		
 		if( mid >= left ){
 			if ( mid <= right )
@@ -218,7 +218,7 @@ public class QuickSort {
 		qs.doQuickSort(A); // already sorted
 		*/
 		
-		/*
+		
 		int testSize = 1000;
 		runTests(testSize, PivotLocation.LEFT);
 		runTests(testSize, PivotLocation.RIGHT);
@@ -229,10 +229,10 @@ public class QuickSort {
 		runTests(testSize, PivotLocation.RIGHT, true);
 		runTests(testSize, PivotLocation.RANDOM, true);
 		runTests(testSize, PivotLocation.MEDIAN, true);
-		*/
+		
 		
 		QuickSort qs = new QuickSort();
-		int[] hwExample  = load( new File("/home/mnasser/workspace/personal-scrap/resources/QuickSort.txt"));
+		int[] hwExample  = load( new File("/home/mnasser/workspace/personal-scrap/src/main/resources/QuickSort.txt"));
 		int[] hwExample2 = Arrays.copyOf(hwExample, hwExample.length);
 		int[] hwExample3 = Arrays.copyOf(hwExample, hwExample.length);
 		int[] hwExample4 = Arrays.copyOf(hwExample, hwExample.length);
@@ -244,14 +244,13 @@ public class QuickSort {
 		System.out.println("["+PivotLocation.RANDOM+"] "+ qs.doQuickSort( hwExample3, PivotLocation.RANDOM) );
 		System.out.println("["+PivotLocation.MEDIAN+"] "+ qs.doQuickSort( hwExample4, PivotLocation.MEDIAN) );
 		
-		/*
+		
 		//Sorted
 		System.out.println("Sorted :");
 		System.out.println("["+PivotLocation.LEFT+"]   "+  qs.doQuickSort( hwExample,  PivotLocation.LEFT) );
 		System.out.println("["+PivotLocation.RIGHT+"]  "+ qs.doQuickSort( hwExample2, PivotLocation.RIGHT) );
 		System.out.println("["+PivotLocation.RANDOM+"] "+ qs.doQuickSort( hwExample3, PivotLocation.RANDOM) );
 		System.out.println("["+PivotLocation.MEDIAN+"] "+ qs.doQuickSort( hwExample4, PivotLocation.MEDIAN) );
-		*/
 		
 		/*
 		int[] Test = new int[]{1,1,20,2,0,3,4,500};
