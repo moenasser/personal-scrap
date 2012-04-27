@@ -68,7 +68,6 @@ public class DFS {
 	public static class FinishingOrder implements BackTrackHook {
 		private int _order = 0;
 		private List<Integer> ordering = new ArrayList<Integer>(); // this migt hurt
-		@Override
 		public void doBackTrack(Vertex s){
 			s.order = ++_order;
 			ordering.add(s.id);
