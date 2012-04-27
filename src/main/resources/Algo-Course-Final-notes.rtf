@@ -1,0 +1,150 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf320
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 Times-Roman;\f2\fnil\fcharset0 Monaco;
+}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww21760\viewh14140\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 MASTER METHOD :\
+T(n ) =  a *  T( n / b ) + n^d\
+\
+            O( n^d log(n) )     if a = b^d   (case 1)\
+T(n) = O( n^d )                 if a < b^d   (case 2)\
+            O( n^log_b(a) )   if a >  b^d   (case 3)\
+====================\
+\
+MINIMUM CUT :\
+\
+G may have more than one min cut.\
+Every node's edges is a minimum cut.  At least n-1 min-cuts.\
+2^n  cuts in total.\
+( n choose 2) is the answer  = n(n-1) / 2\
+\
+Pr[output = (Ai, Bi)] >= 2/ ( n*(n-1))  = 1/(n choose 2) for all i = 1,2\'85n\
+Si's are DISJOINT. so their sum  is at most 1.0\
+\
+Pr[S1] = k/m  <= 2/n\
+Pr[^S1] =  1 - 2/n\
+\
+====================\
+RANDOMIZED - SELECT :\
+\
+half of quick sort.  randomizes pivot selection.\
+=====================\
+LINEARITY OF EXPECTATION : \
+\pard\pardeftab720
+
+\f1\fs30 \cf0 E [X+ Y]
+\f2  = 
+\f1 E[X]
+\f2 + 
+\f1 E[Y]
+\f0\fs24 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+====================\
+Heaps :\
+\
+  Cononical use of heap =  fast way to do repeated minimum computations. Find yourself doing getMin() a zillion times? Don't use selection sort - use Heapsort instead.\
+\
+INSERT :  adds O(log n)   (Bubble up)\
+Extract-MIN : removes an object in O(log n )    (Promote last child - Bubble down)\
+HEAPIFY : (looks like it should be O(n log n) but can be done in O(n)\
+DELETE :  O( log n)\
+\
+Conceptually : \
+Equivalent to BINARY TREE.  - rooted , binary, as complete as possible\
+\
+HEAP property :  at every node x,  value of heap[x] <= all keys  x's children\
+\
+HEAP - you don't actually implement as a Tree. You use a : BINARY ARRAY!\
+[ 4 ][ 4 ][ 8 ][ 9 ][ 4 ][ 12 ][ 9 ][ 11 ][ 13 ]\
+  1    2    3    4    5     6     7     8      9\
+\
+Since the above is technically balanced binary tree \'85 Children of X =  2X , 2X + 1\
+PARENTS of i are i/2 (or floor(i/2) );\
+\
+"Priority queue"  - synomym for heap.\
+Ex :  simulation. (for a video game)\
+ - objects = event records ( action/update to occur at given time in the future ]\
+ - key = time event scheduled to occur\
+ - Exrtact-min => yields the next scheduled event\
+\
+Application : "Median Mainanence"\
+ I give yo u: sequence x1, x2\'85xn of numbers one-by-one..\
+ You tellm e :  at each step i, the median of \{ x1, \'85.  , xi \}\
+ Constraint :  use O(log i) time at each step i.\
+  HINT : use 2 heaps.    Hlow - supposrts extract -Max  &  Hhi - supposrts extract min.\
+   key idea : maintain invariant that ~i/2 smallest (largest) elements in Hlow( Hhi)\
+   you check :  1) can maintain invariant w/  O(logi) work 2) given invariant, can compute median in O(log i) work.\
+  Keep up a fifty-fifty split by extraction max and adding to bigger group of extract min (from Hhi) and adding to low group to make sure \
+\
+Djikatra Shortest-path algorithm.\
+ - naive implementation => runtime = O(nm);  #loop iteration * work per iteration (linear scan through edges for minim computation)\
+ - w/ heaps ->  runtime =  O( m log n).  Much faster than the almost polynomial n*m\
+============================================================\
+\
+Hash Tables :\
+\
+Purpose : mining evolving set of stuff.\
+\
+Insert : add a record \'85 O( 1 )\
+Delete : remove item \'85 O( 1 )\
+Lookup : Check for a record \'85 O( 1 )\
+\
+Think of it like a really BIG array with a hash function() to distribute the records based on the result of the hash function\
+\
+2-SUM problem.\
+\
+============================================================\
+\
+Djikstra's Shortest-Path algorithm\
+\
+NON-NEGATIVE.  No Negative lengths allowed!\
+\
+Handles shortest paths when LENGTHS or WEIGHTS on the edges. Otherwise if all were equal to 1 in length/weight then BFS already does that for you.\
+\
+- X = \{s \}  ( vertices processed so far)\
+- A[s] = 0 ( computed shortest path distances)\
+\
+Main Loop :    ( need to grow x by one node)\
+  - while ( X not in V ):\
+    examine all vertices with src in X and dst  in V \'85.\
+    -  among all edges (v,w) in E  with v in X, w ! in X, pick the one that minimizes \
+       A[v]  + L(sub vw)  (Dijksta's greedy Criterion)\
+     -- basically you start with distance to yourself = 0. Then add that to the lengths to your neighbors. repeat.\
+\
+============================================================\
+\
+Topological sort in a Directed Graph  :  O(n) using DFS\
+\
+Define ; a top. ordering of a directed graph G is a labeling f\
+ go G's  nodes such that : \
+ 1) the f(v)'s are the set \{ 1,2 ,3 \'85..,n \}\
+ 2) (u,v) in G => f(u) < f(v)\
+\'85. i.e., the direction and the ordering are going "forward"\
+s -> v \
+s - > w\
+v -> t\
+w -> t\
+                 __\
+s -\\-> v -/ w \\-> t\
+      --------/\
+(Note: obviously, G must not have cycles - acyclic)\
+(Note: every directed acyclic graph has a SINK VERTEX)\
+\
+DFS Topolocigcal sort - SLICK :\
+DFS( graph g, start Vertex s ) :\
+ - make s visited\
+ - for every edge ( s, v) :\
+    - if v not yet explored :\
+      - DFS ( G, v)\
+ - set f(s) = current_label;  current_label -= 1;\
+\
+Main-DFS -loop( Graph g) : \
+- mark all nodes  unxplored\
+- current_label = n [ to keep track of ordering ]\
+- for each vertex v in G :\
+   - if v not yet explored   (in some previous DFS call )\
+     - DFS ( g, v)\
+ }
