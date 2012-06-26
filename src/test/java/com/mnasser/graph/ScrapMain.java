@@ -1,6 +1,5 @@
 package com.mnasser.graph;
 
-import java.text.NumberFormat;
 
 public class ScrapMain {
 

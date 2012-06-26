@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import com.mnasser.graph.Graph.Edge;
 import com.mnasser.graph.Graph.Vertex;
@@ -49,11 +49,11 @@ public class DFS {
 		s.visited = true;
 		rt.inc();
 		//System.out.println( "visiting " + s ); //s + ((p==null)?"":" (from "+p.id+")" ));
-		int v = 0;
+		//int v = 0;
 		for( Edge e : (reverse)?s.getInBound():s.getOutBound() ){
 			if( ! ((reverse)? e.src.isVisited() : e.dst.isVisited()) ) {
 				traverseDFS( ((reverse)?e.src:e.dst), bth, reverse, rt );
-				v++;
+				//v++;
 			}
 		}
 		if( bth != null && s.order == -1 )  {
@@ -67,7 +67,7 @@ public class DFS {
 	}
 	public static class FinishingOrder implements BackTrackHook {
 		private int _order = 0;
-		private List<Integer> ordering = new ArrayList<Integer>(); // this migt hurt
+		private List<Integer> ordering = new ArrayList<Integer>(); // this might hurt
 		public void doBackTrack(Vertex s){
 			s.order = ++_order;
 			ordering.add(s.id);

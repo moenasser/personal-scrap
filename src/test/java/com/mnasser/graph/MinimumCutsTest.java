@@ -140,7 +140,7 @@ public class MinimumCutsTest {
 		g.addEdge( new Vertex(2), new Vertex(4) );
 		g.addEdge( new Vertex(3), new Vertex(4) );
 		
-		int minCuts = MinimumCut.findMinimumCut(g);
+		int minCuts = MinimumCut.findPossibleMinimumCut(g);
 		
 		Assert.assertEquals( 2 , g.getVertices().size() );
 		//Assert.assertEquals( 2 , minCuts ); // cannot assert this is true. could be 3 or 2

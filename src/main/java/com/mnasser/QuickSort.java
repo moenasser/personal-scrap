@@ -39,9 +39,10 @@ public class QuickSort {
 	public static int getMiddlePivot(int start, int end){
 		int size = end - start + 1;
 		int mid = (int)Math.floor(size / 2);
-		if( (end-start + 1) % 2 == 1 ) // odd
+		if( size % 2 == 1 ) // odd
 			mid += 1;
-		return mid - 1; // arrays are 0-indexed
+		mid -= 1;  //arrays are 0-indexed -  so we have to "shift to the left" all our values
+		return start + mid;  // Major bug : wasn't returning the index relative to the start position!
 	}
 	public static int getLeftMostPivot(int start, int end){
 		return start;
@@ -230,9 +231,10 @@ public class QuickSort {
 		runTests(testSize, PivotLocation.RANDOM, true);
 		runTests(testSize, PivotLocation.MEDIAN, true);
 		
+		System.out.println(DirUtils.getWorkDir() + "QuickSort.txt");
 		
 		QuickSort qs = new QuickSort();
-		int[] hwExample  = load( new File("/home/mnasser/workspace/personal-scrap/src/main/resources/QuickSort.txt"));
+		int[] hwExample  = load( new File( DirUtils.getWorkDir() + "QuickSort.txt"));
 		int[] hwExample2 = Arrays.copyOf(hwExample, hwExample.length);
 		int[] hwExample3 = Arrays.copyOf(hwExample, hwExample.length);
 		int[] hwExample4 = Arrays.copyOf(hwExample, hwExample.length);

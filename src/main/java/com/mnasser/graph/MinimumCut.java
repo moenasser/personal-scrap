@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mnasser.DirUtils;
 import com.mnasser.graph.Graph.Edge;
 import com.mnasser.graph.Graph.Vertex;
 
@@ -58,37 +59,53 @@ public class MinimumCut {
 			System.out.println(G);
 		}
 
+		Graph K = loadGraph(DirUtils.getWorkDir() + "kargerAdj.txt");
+		//System.out.println("Karver graph = \n"+K.toMatrixString());
+		//System.out.println(K);
+		System.out.println("First Graph size : " + K.getVertices().size());
+		System.out.println("Example random minimum cut size : " + findPossibleMinimumCut(K));
 		
-
-		Graph K = loadGraph("/home/mnasser/workspace/personal-scrap/src/main/resources/kargerAdj.txt");
-		System.out.println("Karver graph = \n"+K.toMatrixString());
-		System.out.println(K);
-		findMinimumCut(K);
-		
-		K = loadGraph("/home/mnasser/workspace/personal-scrap/src/main/resources/kargerAdj.txt");
+		K = loadGraph(DirUtils.getWorkDir() +  "kargerAdj.txt");
 		int lowestMinSeen = Integer.MAX_VALUE;
-		for( int ii = 0; ii < 10; ii ++ ){
-			int min = repeatFindMinimumCut(K, 10000);
+		for( int ii = 0; ii < 5; ii ++ ){
+			int min = repeatFindMinimumCut(K, 1000);
 			if( min < lowestMinSeen )
 				lowestMinSeen = min;
-		    System.out.println("Lowest min seen so far " + min);
+		}
+		System.out.println("Lowest minimum seen was = " + lowestMinSeen + '\n');
+
+		
+		Graph K2 = loadGraph(DirUtils.getWorkDir() +  "kargerMinCut.txt");
+		System.out.println(K);
+		System.out.println("2nd Graph size : " + K2.getVertices().size());
+		lowestMinSeen = Integer.MAX_VALUE;
+		for( int ii = 0; ii < 5; ii ++ ){
+			int min = repeatFindMinimumCut(K2, 100); // very slow. so do 100 at a time (~58sec on MacBook Pro 2009, dual-core 2.8 GHz)
+			if( min < lowestMinSeen )
+				lowestMinSeen = min;
 		}
 		System.out.println("Lowest minimum seen was = " + lowestMinSeen);
+		
 	}
 	
 	static int repeatFindMinimumCut(Graph g, int reps){
+		long time = System.currentTimeMillis();
+		System.out.print("Attempting to find a possible minimum cut ("+reps+" repititions)... ");
 		int minCut = Integer.MAX_VALUE;
 		for( int ii = 0; ii < reps; ii++ ){
 			Graph h = Graph.copyOf(g);
-			int min = findMinimumCut(h);
+			int min = findPossibleMinimumCut(h);
 			if( min < minCut){
 				minCut = min;
 			}
 		}
+		time = ( System.currentTimeMillis() - time );
+	    System.out.println("Lowest min seen so far " + minCut + ". ("+(((double)time/1000))+" sec)");
 		return minCut;
 	}
 	
-	static int findMinimumCut(Graph g){
+	// Randomonly finds what could be the minimum cut
+	static int findPossibleMinimumCut(Graph g){
 		//System.out.println("========== Finding minimum cut ");
 		while( g.getVertices().size() > 2 ){
 			Edge e = Graph.chooseRandomEdge(g);
@@ -154,10 +171,13 @@ public class MinimumCut {
 	
 	public static Graph loadGraph(String file) throws IOException{
 		File f = new File(file);
+		System.out.print("Loading file " + file + "...");
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		String line = null;
 		Graph g = new AdjacencyListGraph();
+		int cnt = 0;
 		while( (line=br.readLine())!=null){
+			cnt++;
 			String[] verts = line.trim().split("\\s+");
 			Vertex a = new Vertex(Integer.parseInt(verts[0]));
 			g.addVertex(a);
@@ -168,6 +188,7 @@ public class MinimumCut {
 					g.addEdge( e );
 			}
 		}
+		System.out.println(cnt + " total lines.");
 		return g;
 	}
 	

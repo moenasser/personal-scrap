@@ -97,7 +97,11 @@ public class CountInversions {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		int[] A = load( new File("/home/mnasser/Downloads/CountingInversionsIntegerArray.txt") );
+		String macDir = "/Users/mnasser/Documents/workspace/personal-scrap/src/main/resources/";
+		String pcDir  = "/home/mnasser/Downloads/";
+		String dir = (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0)? macDir : pcDir;
+
+		int[] A = load( new File(dir + "CountingInversionsIntegerArray.txt") );
 		System.out.println("Loaded A : " + A.length);
 		System.out.println("["+A[0]+".."+A[A.length-1]+"]");
 		

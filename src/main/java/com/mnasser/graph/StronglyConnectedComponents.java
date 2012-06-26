@@ -128,6 +128,7 @@ public class StronglyConnectedComponents {
 		return countingMap;
 	}
 	
+	@SuppressWarnings("serial")
 	public static class CountingMap extends TreeMap<Integer,Integer>{
 		public void inc(int size){
 			if( ! this.containsKey(size) ){
