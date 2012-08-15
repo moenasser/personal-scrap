@@ -60,7 +60,7 @@ public class CountInversions {
 			if(A[left.low + ii] <= A[right.low + jj]){
 				// so far so good... keep adding to new array
 				Aprime[aa] = A[left.low + ii];
-				ii ++;  // XXX : NOTE: ONLY increment the left pointer when we have actually added from it.
+				ii ++;  // NOTE: ONLY increment the left pointer when we have actually added from it.
 			}else{
 				// Here we have a right value that is larger than the left.
 				// count this inversion (the amount of elements remaining on the left side).
