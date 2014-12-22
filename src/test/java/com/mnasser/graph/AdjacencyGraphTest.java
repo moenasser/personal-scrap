@@ -91,6 +91,11 @@ public class AdjacencyGraphTest {
 		Edge e2 = new Edge( a, a );
 		Assert.assertTrue(e2.isSelfLoop());
 		
+		Edge e3 = new Edge( a, a, 3 );
+		Assert.assertTrue( e2.equals(e3) );
+		Assert.assertTrue( e3.equals(e2) );
+		
+		Assert.assertNotSame(e2.cost(), e3.cost());
 	}
 	
 	@Test

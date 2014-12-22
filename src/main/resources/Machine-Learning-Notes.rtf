@@ -1,0 +1,29 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf320
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww22540\viewh12380\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 Machine Learning \
+==================\
+\
+ Attack the problem of over fitting.\
+- One way to help w/ over fitting is to "REMOVE" features. But that is loss of information.\
+The other way is : REGULARIZATION\
+\
+Regularization :\
+ - small values for thetas \
+   -- makes for a "simpler" hypothesis\
+   -- less prone for over fitting\
+\
+Ex: Housing :\
+ - features : x1,x2,x3 \'85 x100\
+ - params :  theat1, th2, th3 \'85 th100\
+\
+Cost function now looks like this : \
+\
+  J(theta) =  1/2m * [  SUM\{i=1..m\} ( h_theta(x_i) , y_theta(i)  ) ^ 2   +  <regularization  term>  ]\
+    <regularization term>  =  lamda*SUM\{i=1..n\}( theta_j^2 )\
+\
+\
+}

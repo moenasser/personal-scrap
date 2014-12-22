@@ -24,6 +24,8 @@ public class AdjacencyListGraph extends Graph{
 	@Override public List<Edge> getEdges() {return edges;}
 	@Override public List<Vertex> getVertices() { Collections.sort(vertices); return vertices; }
 	
+	public int getEdgeCount(){		return edges.size();	}
+	public int getVertexCount(){	return vertices.size(); }
 	
 	Vertex addVertex(){
 		int id = makeAnId();
@@ -110,7 +112,7 @@ public class AdjacencyListGraph extends Graph{
 	
 
 	
-	public boolean isConnected(){
+	public boolean hasDisjointNodes(){
 		for( Vertex v : vertices){
 			if ( v.edges.isEmpty() )
 				return false;
@@ -145,7 +147,7 @@ public class AdjacencyListGraph extends Graph{
 		for( int ii =0; ii< vertexSize ; ii++){
 			G.addVertex();
 		}
-		while ( ! G.isConnected() ){
+		while ( ! G.hasDisjointNodes() ){
 			Vertex a = G.getVertices().get( ((int)(Math.random()*vertexSize) % vertexSize) );
 			Vertex b = G.getVertices().get( ((int)(Math.random()*vertexSize) % vertexSize) );
 			if( a != b  && ! G.hasEdge( a, b )  ){

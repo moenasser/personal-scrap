@@ -22,7 +22,11 @@ public abstract class Graph {
 	public abstract Edge getEdge(int a, int b);
 	
 	public boolean isDirected(){ return false ; }
-	public abstract boolean isConnected();
+	public abstract boolean hasDisjointNodes();
+	
+	public abstract int getEdgeCount();
+	public abstract int getVertexCount();
+	
 	
 	public abstract void removeVertex(Vertex v);
 	public abstract void removeEdge(Edge e);
@@ -56,6 +60,13 @@ public abstract class Graph {
 					return e;
 			}
 			return null;
+		}
+		// returns copy of all edges in this vertex
+		public List<Edge> getEdges(){
+			// make copy
+			List<Edge> l = new ArrayList<Edge>();
+			l.addAll(edges);
+			return l;
 		}
 		public Vertex getNeighbor(Edge e){
 			if( hasEdge(e) ){
@@ -154,15 +165,19 @@ public abstract class Graph {
 		}
 	}
 	
-	
 	public static class Edge   {
 		final Vertex src, dst;
+		private int cost;
 		public Edge(Vertex a, Vertex b) {
 			if( a == null || b == null )
 				throw new RuntimeException("Can't have null vertices in and edge : ("
 						+((a==null)?"null":a.id) +','+((b==null)?"null":b.id) );
 			this.src = a;
 			this.dst = b;
+		}
+		public Edge(Vertex a, Vertex b, int cost){
+			this(a,b);
+			this.cost = cost;
 		}
 		/**Vertices use this to get what's on the other side of the edge*/
 		public Vertex otherSide(Vertex head){
@@ -183,6 +198,9 @@ public abstract class Graph {
 		}
 		public Edge reverse(){
 			return new Edge(dst, src);
+		}
+		public int cost(){
+			return cost;
 		}
 		@Override
 		public int hashCode() {
@@ -262,7 +280,7 @@ public abstract class Graph {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Total Vertices = ").append(getVertices().size())
 		  .append(". Total Edges = ").append(getEdges().size())
-		  .append(". Connected = " + isConnected())
+		  .append(". Connected = " + hasDisjointNodes())
 		  .append('\n');
 		return sb.toString();
 	}

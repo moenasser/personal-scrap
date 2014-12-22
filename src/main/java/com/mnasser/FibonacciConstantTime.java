@@ -1,5 +1,11 @@
 package com.mnasser;
 
+/**
+ * A constant-time implementation of Fibonacci sequence
+ * using Golden Ratio.
+ * @author mnasser
+ *
+ */
 public class FibonacciConstantTime {
 
 	private static final double SQRT5= Math.sqrt(5);
