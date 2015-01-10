@@ -2,6 +2,7 @@ package com.mnasser.util;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  * children that are larger than it.  This means the root of the tree will obviously
  * have the smallest element. 
  * 
- * 2 basic functions are provided : insert & return minimum. 
+ * 2 basic functions are provided : insert & remove root
  * 
  * By default this Heap will use the given comparator to decide on the comparison 
  * ordering of the given elements in order to figure out what the "minimum" key value 
@@ -23,7 +24,7 @@ import java.util.List;
  * @author mnasser
  *
  */
-public class Heap<K> {
+public class Heap<K> implements Iterable<K>{
 	
 	protected Comparator<K> comp = null;
 	private final boolean returnMax;
@@ -210,6 +211,22 @@ public class Heap<K> {
 			}
 		}
 	}
+
+	/**Returns the number of elements in this heap*/
+	public int size(){
+		return heap.size();
+	}
+	
+	@Override
+	public Iterator<K> iterator() {
+		return heap.iterator();
+	}
+	
+	/*Returns the root element without removing it
+	public K peek(){
+		return  heap.isEmpty()? null :  heap.get(0);
+	}
+	*/
 	
 	/** Given index of a child, finds its parent **/
 	public static int getParent(int child){

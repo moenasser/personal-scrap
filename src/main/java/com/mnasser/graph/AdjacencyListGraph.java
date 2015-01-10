@@ -6,6 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Simple implementation of a Graph as listing of all edges <code>E</code>
+ * between vertices <code>V</code>.
+ * 
+ * </p>
+ * TODO : replace array of vertices/edges with a Heap or Binary tree of sorts
+ * @author Moe
+ */
 public class AdjacencyListGraph extends Graph{
 	
 	public AdjacencyListGraph(int initialSize) {
@@ -111,7 +119,8 @@ public class AdjacencyListGraph extends Graph{
 	}
 	
 
-	
+	/**Returns true iff there exists at least 1 vertex with
+	 * no edges leading to or from it.*/
 	public boolean hasDisjointNodes(){
 		for( Vertex v : vertices){
 			if ( v.edges.isEmpty() )
@@ -120,6 +129,10 @@ public class AdjacencyListGraph extends Graph{
 		return true;
 	}
 
+	/**Removes the given edge from this graph.  
+	 * </p>
+	 * The vertices incident on this edge will also no longer have this edge 
+	 * connecting them */
 	public void removeEdge(Edge e){
 		if(hasEdge(e)){
 			e.src.removeEdge(e);
@@ -128,6 +141,11 @@ public class AdjacencyListGraph extends Graph{
 		}
 	}
 	
+	/**Removes the vertex from this graph.
+	 * </p>
+	 * After this operation all other vertices will have edges incident on 
+	 * <code>v</code> removed as well. ie, all edges touching <code>v</code> 
+	 * will also be removed */
 	public void removeVertex(Vertex v){
 		// find the edges in v and remove them
 		// then remove v

@@ -3,6 +3,11 @@ package com.mnasser.graph;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A generic representation of a graph.  It consists of edges E and vertices V.
+ * 
+ * @author Moe
+ */
 public abstract class Graph {
 	
 	public abstract List<Vertex> getVertices();
@@ -32,7 +37,7 @@ public abstract class Graph {
 	public abstract void removeEdge(Edge e);
 	
 	private static int _ids = 0;
-	public static int makeAnId(){
+	protected static int makeAnId(){
 		return ++ _ids;
 	}
 	
@@ -44,16 +49,36 @@ public abstract class Graph {
 		return q;
 	}
 
+	/**
+	 * Logical representation of a vertex point on a graph. 
+	 * </p>
+	 * Keeps a 
+	 * @author Moe
+	 */
 	public static class Vertex implements Comparable<Vertex> {
+		/**TODO : allow for parameterized IDs and/or contents.
+		 * ex: String, Integer, Object etc. This will mean the parameterized
+		 * contents will have to be comparable and define hashCode & equals.*/
 		public final int id;
+		
 		protected List<Edge> edges;
 		protected boolean visited = false;
 		protected int order = -1;
 		protected boolean directed = false;
+		
+		/**The leader pointer is used for Union-Find algorithms
+		 * By default each vertex is in its own cluster and thus is its
+		 * own leader pointer*/
+		protected Vertex leaderPointer = this;
+		/**How many other vertices point to this vertex.*/
+		protected int followerCount = 0;
+		
 		public Vertex(int id) {
 			this.id = id;
 			this.edges = new ArrayList<Edge>();
 		}
+		/**Given another vertex <code>b</code> returns the edge
+		 * incident on both us and <code>b</code>.  Returns null otherwise.*/
 		public Edge getEdge(Vertex b){
 			for( Edge e : edges ){
 				if( b.equals( e.otherSide(this)) )
@@ -61,13 +86,15 @@ public abstract class Graph {
 			}
 			return null;
 		}
-		// returns copy of all edges in this vertex
+		/**Returns a copy of all edges incident on this vertex */
 		public List<Edge> getEdges(){
 			// make copy
 			List<Edge> l = new ArrayList<Edge>();
 			l.addAll(edges);
 			return l;
 		}
+		/**Given an edge <code>e</code> returns the vertex opposite us on the 
+		 * other side of <code>e</code>. */
 		public Vertex getNeighbor(Edge e){
 			if( hasEdge(e) ){
 				return e.otherSide(this);
@@ -82,6 +109,8 @@ public abstract class Graph {
 				edges.remove(e);
 			}
 		}
+		/**Returns true iff there is an edge incident on both this vertex 
+		 * and <code>b</code>*/
 		boolean hasNeighbor(Vertex b){
 			for(Edge e : edges){
 				if( b.equals( e.otherSide(this) ))
@@ -89,6 +118,8 @@ public abstract class Graph {
 			}
 			return false;
 		}
+		/**Returns the number of edges incident on both this vertex and on
+		 * the given vertex <code>b</cdoe>*/
 		int numEdges(Vertex b ){
 			if( b == null )	return 0; 
 			int ii = 0;
@@ -98,6 +129,7 @@ public abstract class Graph {
 			}
 			return ii;
 		}
+		/**Returns a list of all edges where this vertex is a source vertex. */
 		List<Edge> getOutBound(){
 			List<Edge> out = new ArrayList<Edge>();
 			for( Edge e : edges ){
@@ -107,6 +139,7 @@ public abstract class Graph {
 			}
 			return out;
 		}
+		/**Returns a list of all edges where this vertex is a destination vertex.*/
 		List<Edge> getInBound(){
 			List<Edge> in = new ArrayList<Edge>();
 			for( Edge e : edges ){
@@ -116,6 +149,7 @@ public abstract class Graph {
 			}
 			return in;
 		}
+		/**Returns true if this vertex has been visited.*/
 		boolean isVisited(){ return this.visited; }
 		boolean isVisited(Edge e, boolean reverse){
 			if( ! e.isIncidentOn(this) ){
@@ -164,7 +198,11 @@ public abstract class Graph {
 			return Integer.valueOf(this.id).compareTo(o.id);
 		}
 	}
-	
+	/**Logical representation of an edge between to vertices on a graph.
+	 * Can be weighted by given it a cost during construction.  Can be thought
+	 * of as being directed since it can remember the vertices as source and 
+	 * destination points.  
+	 * */
 	public static class Edge   {
 		final Vertex src, dst;
 		private int cost;
@@ -179,6 +217,11 @@ public abstract class Graph {
 			this(a,b);
 			this.cost = cost;
 		}
+		/**Returns the vertex at the source end of this edge */
+		public Vertex getSrcVertex(){ return src; }
+		/**Returns the vertex at the destination end of this edge */
+		public Vertex getDstVertex(){ return dst; }
+		
 		/**Vertices use this to get what's on the other side of the edge*/
 		public Vertex otherSide(Vertex head){
 			if( this.src.equals(head) )
@@ -187,18 +230,27 @@ public abstract class Graph {
 				return this.src;
 			return null;
 		}
+		/**Returns true iff this edge touches vertex <code>a</code>.*/
 		public boolean isIncidentOn( Vertex a ){
 			return  src.equals(a) || dst.equals(a);
 		}
+		/**Returns a string representing the endpoints along this edge in the 
+		 * following format : <code>(src,dst)</code>*/
 		public String toString(){
 			return "("+src.id +","+dst.id+")";
 		}
+		/**Returns true iff this edge's end points are one and the same*/
 		public boolean isSelfLoop(){
 			return src.equals(dst);
 		}
+		/**Returns an edge (not currently connected to the graph) with its
+		 * source and destination reversed.  
+		 */
 		public Edge reverse(){
 			return new Edge(dst, src);
 		}
+		/**Returns the cost of traversing this edge if this is to be 
+		 * used in a weighted graph*/
 		public int cost(){
 			return cost;
 		}
@@ -241,17 +293,19 @@ public abstract class Graph {
 			*/
 		}
 	}
-	
-	public static Edge chooseRandomEdge(Graph g){
-		int esize = g.getEdges().size();
+	/**Returns a randomly selected edge from graph <code>G</code>. */
+	public static Edge chooseRandomEdge(Graph G){
+		int esize = G.getEdges().size();
 		if( esize == 0 ) throw new RuntimeException("Attempt to choose an edge from graph w/ no edges!");//return null;
 		int idx = (int)(Math.random() * esize) % esize;
-		return g.getEdges().get(idx);
+		return G.getEdges().get(idx);
 	}
-	public static Vertex chooseRandomVertex(Graph g){
-		int esize = g.getVertices().size();
+	/**If graph <code>G</code> is no empty, returns a randomly selected vertex */
+	public static Vertex chooseRandomVertex(Graph G){
+		int esize = G.getVertices().size();
+		if( esize == 0 )throw new RuntimeException("Attempt to choose a vertex from empty graph!");
 		int idx = (int)(Math.random() * esize) % esize;
-		return g.getVertices().get(idx);
+		return G.getVertices().get(idx);
 	}
 	
 
