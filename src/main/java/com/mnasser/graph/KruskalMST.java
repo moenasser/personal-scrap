@@ -50,19 +50,24 @@ public class KruskalMST {
 			sortedEdges.insert(e);
 			e.src.visited = false;
 			e.dst.visited = false;
+			e.src.leaderPointer = e.src; // each has itself as leader pointer
+			e.dst.leaderPointer = e.dst; // ie, its own cluster of 1
 		}
 		
 		//begin our loop by adding in edges and adjusting leader pointers
 		for( Edge e : sortedEdges ){
 			
 		}
-		return null;
+		
+		return T;
 	}
 	
 	/** Finds the cluster group (connected components group) that <code>v</code>
 	 * is a part of.*/
 	protected static Vertex find(Vertex v){
-		return v.leaderPointer;
+		Vertex leader = v.leaderPointer;
+		return  ( leader.leaderPointer != leader )? find(leader) : leader ;
+		// in Lazy-Union-Find we need multiple 
 	}
 	
 	/** Given the leaders of 2 connected component groups, will merge them into 
@@ -71,5 +76,7 @@ public class KruskalMST {
 		Vertex leader = (v.followerCount >= u.followerCount)? v : u;
 		Vertex follow = (u.followerCount < v.followerCount )? u : v;
 		
+		// TODO : how do we find all followers beneath a leader vertex?
+		// TODO : must add follower array to each vertex
 	}
 }
