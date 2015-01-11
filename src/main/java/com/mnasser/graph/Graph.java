@@ -71,7 +71,7 @@ public abstract class Graph {
 		 * own leader pointer*/
 		protected Vertex leaderPointer = this;
 		/**How many other vertices point to this vertex.*/
-		protected int followerCount = 0;
+		protected List<Vertex> followers = null;
 		
 		public Vertex(int id) {
 			this.id = id;
