@@ -64,7 +64,7 @@ public class AdjacencyListGraph extends Graph{
 		edges.add(e);
 		*/
 	}
-	public void addEdge(int ia, int ib){
+	public synchronized void addEdge(int ia, int ib){
 		Vertex a = addVertex(ia);
 		Vertex b = addVertex(ib);
 		Edge e1 = new Edge( a, b );
@@ -72,12 +72,12 @@ public class AdjacencyListGraph extends Graph{
 		b.edges.add(e1);
 		edges.add( e1 );
 	}
-	public void addEdge(Edge e){
+	public synchronized void addEdge(Edge e){
 		addVertex(e.src);
 		addVertex(e.dst);
 		Vertex a = getVertex(e.src); 
 		Vertex b = getVertex(e.dst);
-		Edge e1 = new Edge( a, b );
+		Edge e1 = new Edge( a, b , e.cost());
 		a.edges.add(e1);
 		b.edges.add(e1);
 		edges.add( e1 );

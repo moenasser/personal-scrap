@@ -41,9 +41,10 @@ public class KruskalMST {
 		Graph T = new AdjacencyListGraph();
 		
 		//Ranked edges by their costs
-		Heap<Edge> sortedEdges = new Heap<Edge>(new Comparator<Edge>() {
+		Heap<Edge> edgeHeap = new Heap<Edge>(new Comparator<Edge>() {
 			public int compare(Edge e1, Edge e2) {
-				return e1.cost() - e2.cost();
+				int cost1 = e1.cost();  int cost2 = e2.cost();
+				return (cost1 < cost2 ? -1 : (cost1==cost2 ? 0 : 1));
 			};
 		});
 		
@@ -51,7 +52,7 @@ public class KruskalMST {
 		
 		//Add edges to heap. (TODO : create "heapify" batch loading method)
 		for( Edge e : G.getEdges()){
-			sortedEdges.insert(e);
+			edgeHeap.insert(e);
 			e.src.visited = false;
 			e.dst.visited = false;
 			e.src.leaderPointer = e.src; // each has itself as leader pointer
@@ -66,13 +67,19 @@ public class KruskalMST {
 		start = System.currentTimeMillis();
 		
 		//begin our loop by adding in edges and adjusting leader pointers
-		for( Edge e : sortedEdges ){
+		while ( edgeHeap.size() > 0 ) {
+			//System.out.println( edgeHeap );
+			Edge e = edgeHeap.removeRoot();
+			
 			// since both of these are in connected component groups,
 			// we need to find their leader pointers.  If both Nodes are 
 			// already in the same leader pointer group then adding 
 			// this edge will cause a CYCLE.  
 			if(  find( e.src ) !=  find( e.dst )  ) 
 			{
+				// add the edge + vertices to T
+				T.addEdge( e );
+				// make sure they are in the same group
 				union( e.src , e.dst );
 			}	
 			
@@ -97,18 +104,25 @@ public class KruskalMST {
 	/** Given the leaders of 2 connected component groups, will merge them into 
 	 * 1 by updating all leader pointers of each group.*/
 	protected static void union(Vertex v, Vertex u){
-		Vertex leader = (v.followers.size() >= u.followers.size())? v : u;
-		Vertex follower = (u.followers.size() < v.followers.size() )? u : v;
+		Vertex leader = null , follower = null;
+		if( v.followers.size() >= u.followers.size() ){
+			leader = v;  follower = u;
+		}else{
+			leader = u;  follower = v;
+		}
+		//Vertex leader = (v.followers.size() >= u.followers.size())? v : u;
+		//Vertex follower = (u.followers.size() < v.followers.size() )? u : v;
 		
 		// NOTE: This will create a "flat" tree of followers 1-level below the leader
 		// For Lazy-Union-Find you would allow multiple levels.
 		for( Vertex f : follower.followers ){
 			f.leaderPointer = leader;
-			f.followers = null; // for Lazy-Union-Find, allow follower to retain followers
+			f.followers.clear(); // for Lazy-Union-Find, allow follower to retain followers
 		}
 		
 		leader.followers.addAll(follower.followers);
-		follower.followers = null;
+		leader.followers.add( follower );
+		follower.followers.clear();
 		follower.leaderPointer = leader;
 		// TODO : how do we find all followers beneath a leader vertex?
 		// TODO : must add follower array to each vertex

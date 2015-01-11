@@ -9,6 +9,11 @@ import java.util.List;
  * @author Moe
  */
 public abstract class Graph {
+
+	/**Factory constructor**/
+	public static Graph getGraphInstance(){
+		return new AdjacencyListGraph();
+	}
 	
 	public abstract List<Vertex> getVertices();
 	public abstract List<Edge> getEdges();
@@ -237,7 +242,7 @@ public abstract class Graph {
 		/**Returns a string representing the endpoints along this edge in the 
 		 * following format : <code>(src,dst)</code>*/
 		public String toString(){
-			return "("+src.id +","+dst.id+")";
+			return "("+src.id +","+dst.id+")"+cost;
 		}
 		/**Returns true iff this edge's end points are one and the same*/
 		public boolean isSelfLoop(){
@@ -247,7 +252,7 @@ public abstract class Graph {
 		 * source and destination reversed.  
 		 */
 		public Edge reverse(){
-			return new Edge(dst, src);
+			return new Edge(dst, src, cost);
 		}
 		/**Returns the cost of traversing this edge if this is to be 
 		 * used in a weighted graph*/

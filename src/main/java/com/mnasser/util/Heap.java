@@ -222,6 +222,11 @@ public class Heap<K> implements Iterable<K>{
 		return heap.iterator();
 	}
 	
+	@Override
+	public String toString(){
+		return heap.toString();
+	}
+	
 	/*Returns the root element without removing it
 	public K peek(){
 		return  heap.isEmpty()? null :  heap.get(0);
