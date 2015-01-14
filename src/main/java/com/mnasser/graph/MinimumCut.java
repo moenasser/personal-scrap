@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import com.mnasser.graph.Graph.Vertex;
 
 public class MinimumCut {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, URISyntaxException {
 		Graph G = Graph.makeRandomGraph(5);
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
@@ -169,9 +170,13 @@ public class MinimumCut {
 		}
 	}
 	
-	public static Graph loadGraph(String file) throws IOException{
-		File f = new File(file);
-		System.out.print("Loading file " + file + "...");
+	public static Graph loadGraph(String file) throws IOException, URISyntaxException{
+		File f = new File( MinimumCut.class.getResource(file).toURI() );
+		return loadGraph( f );
+	}
+	public static Graph loadGraph(File f) throws IOException{
+		//File f = new File( MinimumCutsTest.class.getResource(file).toURI() );
+		System.out.print("Loading file " + f.getName() + "...");
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		String line = null;
 		Graph g = new AdjacencyListGraph();

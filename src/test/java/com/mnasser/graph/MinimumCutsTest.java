@@ -149,7 +149,8 @@ public class MinimumCutsTest {
 	
 	@Test
 	public void testMinCuts() throws Exception {
-		Graph g = MinimumCut.loadGraph("/home/mnasser/workspace/personal-scrap/src/main/resources/kargerTest.txt");
+		//Graph g = MinimumCut.loadGraph("/home/mnasser/workspace/personal-scrap/src/main/resources/kargerTest.txt");
+		Graph g = MinimumCut.loadGraph("kargerTest.txt");
 		System.out.println( "Min cut = " +  MinimumCut.repeatFindMinimumCut(g, 1000) );
 	}
 
