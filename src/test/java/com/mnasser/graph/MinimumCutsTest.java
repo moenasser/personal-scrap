@@ -16,7 +16,7 @@ public class MinimumCutsTest {
 
 	@Test
 	public void testRandomEdgeSelect() throws Exception {
-		Graph G = AdjacencyListGraph.makeRandomGraph(5);
+		Graph G = Graph.makeRandomGraph(5);
 		//System.out.println(G);
 		//System.out.println(G.toMatrixString());
 		//System.out.println(G.isConnected());
@@ -50,7 +50,7 @@ public class MinimumCutsTest {
 	
 	@Test
 	public void testRemoveRandomEdge() throws Exception {
-		Graph g = AdjacencyListGraph.makeRandomGraph(5);
+		Graph g = Graph.makeRandomGraph(5);
 		
 		Edge e = Graph.chooseRandomEdge(g);
 		Assert.assertTrue( g.hasEdge(e) );
@@ -64,7 +64,7 @@ public class MinimumCutsTest {
 	
 	@Test
 	public void testRemoveRandomVertex() throws Exception {
-		Graph g = AdjacencyListGraph.makeRandomGraph(5);
+		Graph g = Graph.makeRandomGraph(5);
 		
 		Vertex a = Graph.chooseRandomVertex(g);
 		Assert.assertTrue(g.hasVertex(a));

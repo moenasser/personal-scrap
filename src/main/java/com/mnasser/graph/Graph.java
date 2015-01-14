@@ -3,6 +3,7 @@ package com.mnasser.graph;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A generic representation of a graph.  It consists of edges E and vertices V.
@@ -330,7 +331,7 @@ public abstract class Graph {
 	
 	public String toAdjListString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(toInfoLine());
+		sb.append(toInfoLine()).append('\n');
 		Vertex _v = null;
 		try{
 			for(Vertex v : getVertices()){
@@ -351,14 +352,13 @@ public abstract class Graph {
 	protected String toInfoLine(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("Total Vertices = ").append(getVertices().size())
-		  .append(". Total Edges = ").append(getEdges().size())
+		  .append(". Total Edges = ").append(getEdges().size()) ;
 		  //.append(". Connected = " + hasDisjointNodes())
-		  .append('\n');
 		return sb.toString();
 	}
 	public String toMatrixString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(toInfoLine()).append('\t');
+		sb.append(toInfoLine()).append('\n').append('\t');
 		for( Vertex v : getVertices() ){
 			sb.append("  ").append(v.id).append(' ');
 		}
@@ -381,5 +381,42 @@ public abstract class Graph {
 			sb.append("\n");
 		}
 		return sb.toString();
+	}
+
+	// package private
+	static Random RAND = new Random();
+	/**
+	 * Attempts to return a random number between -1000 & 1000 exclusive. 
+	 * @return pseudorandom number between -1,000 and 1,0000.
+	 */
+	public static int getRandomCost(){
+		// random number [0-999)  ...  random sign
+		//return RAND.nextInt(1000) * (int)(Math.pow( -1.0 , ( RAND.nextInt(2)+1) ));
+		return RAND.nextInt() % 1000;
+	}
+	
+
+	/**
+	 * Attempts to construct a graph with at least {@code vertexSize} 
+	 * vertices. 
+	 * </p>
+	 * The graph is guaranteed to have at least one edge for every vertex.
+	 * (But there is no guarantee the graph is wholly connected). 
+	 * @param vertexSize
+	 * @return A graph of size {@code vertexSize} with a random number of edges.
+	 */
+	public static Graph makeRandomGraph(int vertexSize){
+		AdjacencyListGraph G = new AdjacencyListGraph();
+		for( int ii =0; ii< vertexSize ; ii++){
+			G.addVertex(); 
+		}
+		while ( ! G.hasDisjointNodes() ){
+			Vertex a = G.getVertices().get( ((int)(Math.random()*vertexSize) % vertexSize) );
+			Vertex b = G.getVertices().get( ((int)(Math.random()*vertexSize) % vertexSize) );
+			if( a != b  && ! G.hasEdge( a, b )  ){
+				G.addEdge(  new Edge( a, b, Graph.getRandomCost() )  );
+			}
+		}
+		return G;
 	}
 }

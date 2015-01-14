@@ -160,19 +160,4 @@ public class AdjacencyListGraph extends Graph{
 		_vertmap.remove(v.id);
 	}
 	
-	public static AdjacencyListGraph makeRandomGraph(int vertexSize){
-		AdjacencyListGraph G = new AdjacencyListGraph();
-		for( int ii =0; ii< vertexSize ; ii++){
-			G.addVertex();
-		}
-		while ( ! G.hasDisjointNodes() ){
-			Vertex a = G.getVertices().get( ((int)(Math.random()*vertexSize) % vertexSize) );
-			Vertex b = G.getVertices().get( ((int)(Math.random()*vertexSize) % vertexSize) );
-			if( a != b  && ! G.hasEdge( a, b )  ){
-				G.addEdge(  new Edge( a, b )  );
-			}
-		}
-		return G;
-	}
-	
 }

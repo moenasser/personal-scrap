@@ -14,7 +14,7 @@ import com.mnasser.graph.Graph.Vertex;
 public class MinimumCut {
 
 	public static void main(String[] args) throws IOException {
-		Graph G = AdjacencyListGraph.makeRandomGraph(5);
+		Graph G = Graph.makeRandomGraph(5);
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
 		
@@ -38,7 +38,7 @@ public class MinimumCut {
 		
 		
 		System.out.println("Contracting edge TEST ==========");
-		G = AdjacencyListGraph.makeRandomGraph(5);
+		G = Graph.makeRandomGraph(5);
 		e = Graph.chooseRandomEdge(G);
 		System.out.println(G.toMatrixString());
 		System.out.println(G);

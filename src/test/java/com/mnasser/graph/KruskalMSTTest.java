@@ -96,5 +96,20 @@ public class KruskalMSTTest {
 		System.out.println(G.toInfoLine());
 		return G;
 	}
+	
+	@Test
+	public void randomTest(){
+		Graph G = Graph.makeRandomGraph( 1000 );
+		System.out.println( G.toInfoLine() );
+		
+		Graph T = KruskalMST.findMST( G );
+		System.out.println( T.toInfoLine() );
+		
+		int total_cost = 0;
+		for( Edge e : T.getEdges() )
+			total_cost += e.cost();
+		
+		System.out.println("Total cost of MST  : " + total_cost);
+	}
 
 }
