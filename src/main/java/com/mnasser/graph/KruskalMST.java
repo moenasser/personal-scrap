@@ -1,7 +1,6 @@
 package com.mnasser.graph;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 import com.mnasser.graph.Graph.Edge;
 import com.mnasser.graph.Graph.Vertex;
@@ -41,15 +40,11 @@ public class KruskalMST {
 		Graph T = new AdjacencyListGraph();
 		
 		//Ranked edges by their costs
-		Heap<Edge> edgeHeap = new Heap<Edge>(new Comparator<Edge>() {
-			public int compare(Edge e1, Edge e2) {
-				int cost1 = e1.cost();  int cost2 = e2.cost();
-				return (cost1 < cost2 ? -1 : (cost1==cost2 ? 0 : 1));
-			};
-		});
+		Heap<Edge> edgeHeap = new Heap<Edge>(Graph.getEdgeComparator());
 		
 		long start = System.currentTimeMillis();
 		
+		//Initialization ...
 		//Add edges to heap. (TODO : create "heapify" batch loading method)
 		for( Edge e : G.getEdges()){
 			edgeHeap.insert(e);
@@ -80,7 +75,7 @@ public class KruskalMST {
 				// add the edge + vertices to T
 				T.addEdge( e );
 				// make sure they are in the same group
-				union( e.src , e.dst );
+				union( find(e.src) ,  find(e.dst) );
 			}	
 			
 			if ( T.getVertexCount() == G.getVertexCount() ) // we're done. 

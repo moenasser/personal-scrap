@@ -1,6 +1,7 @@
 package com.mnasser.graph;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -11,8 +12,20 @@ import java.util.List;
 public abstract class Graph {
 
 	/**Factory constructor**/
-	public static Graph getGraphInstance(){
+	public static Graph getInstance(){
 		return new AdjacencyListGraph();
+	}
+	
+	/**Factory method returning a simple comparator which uses edge costs
+	 * to determine ordering. */
+	public static Comparator<Edge> getEdgeComparator(){
+		return new Comparator<Edge>() {
+			@Override
+			public int compare(Edge o1, Edge o2) {
+				int cost1 = o1.cost(),  cost2 = o2.cost();
+				return (cost1 < cost2)? -1 : (cost1==cost2)? 0 : 1 ;
+			}
+		};
 	}
 	
 	public abstract List<Vertex> getVertices();
@@ -339,7 +352,7 @@ public abstract class Graph {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Total Vertices = ").append(getVertices().size())
 		  .append(". Total Edges = ").append(getEdges().size())
-		  .append(". Connected = " + hasDisjointNodes())
+		  //.append(". Connected = " + hasDisjointNodes())
 		  .append('\n');
 		return sb.toString();
 	}
