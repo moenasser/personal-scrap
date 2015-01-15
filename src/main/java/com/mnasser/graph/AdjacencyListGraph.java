@@ -28,6 +28,7 @@ public class AdjacencyListGraph extends Graph{
 	private List<Vertex> vertices = null; 
 	private List<Edge>   edges    = null; 
 	private Map<Integer,Vertex> _vertmap = null;
+	private int connected_vertices = 0;
 
 	@Override public List<Edge> getEdges() {return edges;}
 	@Override public List<Vertex> getVertices() { Collections.sort(vertices); return vertices; }
@@ -71,6 +72,9 @@ public class AdjacencyListGraph extends Graph{
 		a.edges.add(e1);
 		b.edges.add(e1);
 		edges.add( e1 );
+		
+		if( a.edges.size() == 1 ) connected_vertices++;
+		if( b.edges.size() == 1 ) connected_vertices++;
 	}
 	public synchronized void addEdge(Edge e){
 		addVertex(e.src);
@@ -81,6 +85,9 @@ public class AdjacencyListGraph extends Graph{
 		a.edges.add(e1);
 		b.edges.add(e1);
 		edges.add( e1 );
+		
+		if( a.edges.size() == 1 ) connected_vertices++;
+		if( b.edges.size() == 1 ) connected_vertices++;
 	}
 	public boolean hasEdge(Edge e){
 		return  edges.contains(e);
@@ -122,11 +129,12 @@ public class AdjacencyListGraph extends Graph{
 	/**Returns true iff there exists at least 1 vertex with
 	 * no edges leading to or from it.*/
 	public boolean hasDisjointNodes(){
-		for( Vertex v : vertices){
-			if ( v.edges.isEmpty() )
-				return false;
-		}
-		return true;
+		return connected_vertices < vertices.size();
+		//	for( Vertex v : vertices){
+		//		if ( v.edges.isEmpty() )
+		//			return false;
+		//	}
+		//	return true;
 	}
 
 	/**Removes the given edge from this graph.  

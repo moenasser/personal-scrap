@@ -55,8 +55,10 @@ public abstract class Graph {
 	public abstract void removeVertex(Vertex v);
 	public abstract void removeEdge(Edge e);
 	
-	private static int _ids = 0;
-	protected static int makeAnId(){
+	
+	//private static int _ids = 0;
+	private int _ids = 0;
+	protected int makeAnId(){
 		return ++ _ids;
 	}
 	
@@ -406,17 +408,64 @@ public abstract class Graph {
 	 * @return A graph of size {@code vertexSize} with a random number of edges.
 	 */
 	public static Graph makeRandomGraph(int vertexSize){
-		AdjacencyListGraph G = new AdjacencyListGraph();
+		long start = System.currentTimeMillis();
+		AdjacencyListGraph G = new AdjacencyListGraph(vertexSize);
 		for( int ii =0; ii< vertexSize ; ii++){
 			G.addVertex(); 
 		}
-		while ( ! G.hasDisjointNodes() ){
-			Vertex a = G.getVertices().get( ((int)(Math.random()*vertexSize) % vertexSize) );
-			Vertex b = G.getVertices().get( ((int)(Math.random()*vertexSize) % vertexSize) );
-			if( a != b  && ! G.hasEdge( a, b )  ){
-				G.addEdge(  new Edge( a, b, Graph.getRandomCost() )  );
+		long nodes = System.currentTimeMillis();
+		
+		// Make connections to every node
+		//while ( G.hasDisjointNodes() ){
+		for( int ii = 0 ; ii < vertexSize ; ii++ ) {
+			//Vertex a = G.getVertices().get( (int)(Math.random()*vertexSize)  );
+			//Vertex a = G.getVertex( RAND.nextInt(vertexSize) + 1  );
+			Vertex a = G.getVertex(ii + 1);
+			Vertex b;
+			do {
+				b = G.getVertex( RAND.nextInt(vertexSize) + 1  );
+			}while( a == b  ||  G.hasEdge( a, b )  ); 
+			
+			G.addEdge(  new Edge( a, b, Graph.getRandomCost() )  );
+		}
+		long edges = System.currentTimeMillis();
+
+		// Make a bunch of random edges
+		int rand_edges = vertexSize / 2;
+		for( int ii = 0 ; ii < rand_edges ; ii++ ) {
+		//while( G.hasDisjointNodes() ) {
+			Vertex a = G.getVertex( RAND.nextInt(vertexSize) + 1 );
+			Vertex b;
+			do {
+				b = G.getVertex( RAND.nextInt(vertexSize) + 1);
+			}while( a == b  ||  G.hasEdge( a, b )  ); 
+			
+			G.addEdge(  new Edge( a, b, Graph.getRandomCost() )  );
+		}
+		long more_rand_edges = System.currentTimeMillis();
+
+		
+		// Find any lonely singleton nodes... 
+		for( Vertex a : G.getVertices() ) {
+			if( a.getEdges().isEmpty() ){ // ...disjoint? Give him a hug ... 
+				Vertex b;
+				do {
+					// find any random other node 
+					b = G.getVertex( RAND.nextInt(vertexSize) + 1 );
+				}while ( a == b  ); // (no, can't hug ourselves)
+				
+				G.addEdge( new Edge( a, b , Graph.getRandomCost() ) );
 			}
 		}
+		long singles = System.currentTimeMillis();
+		
+		System.out.println();
+		System.out.printf("Time to fill nodes        : %sms%n", nodes - start);
+		System.out.printf("Time random edges         : %sms%n", edges - nodes);
+		System.out.printf("Time more random edges    : %sms%n", more_rand_edges - edges);
+		System.out.printf("Time connect single nodes : %sms%n", singles - more_rand_edges);
+		System.out.println();
+
 		return G;
 	}
 }

@@ -227,11 +227,10 @@ public class Heap<K> implements Iterable<K>{
 		return heap.toString();
 	}
 	
-	/*Returns the root element without removing it
+	/** Returns the root element without removing it **/
 	public K peek(){
 		return  heap.isEmpty()? null :  heap.get(0);
 	}
-	*/
 	
 	/** Given index of a child, finds its parent **/
 	public static int getParent(int child){

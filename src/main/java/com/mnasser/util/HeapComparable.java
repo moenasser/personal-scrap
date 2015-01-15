@@ -28,28 +28,10 @@ public class HeapComparable<K extends Comparable<K>> extends Heap<K> {
 	 * @return Returns true if the parent is strictly less than 
 	 * (not equal to or greater than) the child
 	 */
+	@Override
 	protected int compare( K parent, K child ){
 		return parent.compareTo(child);
 	}
 	
 	
-	
-	public static void main(String[] args) {
-		HeapComparable<String> h = new HeapComparable<String>(false);
-		
-		h.insert("hi");
-		h.insert("hello");
-		h.insert("moe");
-		h.insert("-");
-		h.insert("go");
-		h.insert("apple");
-		h.insert("zebra");
-		
-		Heap.print(h);
-		
-		h.removeRoot();
-		
-		Heap.print(h);
-		
-	}
 }

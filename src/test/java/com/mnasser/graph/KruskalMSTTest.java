@@ -99,7 +99,7 @@ public class KruskalMSTTest {
 	
 	@Test
 	public void randomTest(){
-		Graph G = Graph.makeRandomGraph( 1000 );
+		Graph G = Graph.makeRandomGraph( 100000 );
 		System.out.println( G.toInfoLine() );
 		
 		Graph T = KruskalMST.findMST( G );

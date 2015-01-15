@@ -69,13 +69,16 @@ public class KruskalMST {
 			// since both of these are in connected component groups,
 			// we need to find their leader pointers.  If both Nodes are 
 			// already in the same leader pointer group then adding 
-			// this edge will cause a CYCLE.  
-			if(  find( e.src ) !=  find( e.dst )  ) 
+			// this edge will cause a CYCLE.
+			Vertex cluster1 = find( e.src );
+			Vertex cluster2 = find( e.dst );
+			
+			if(  cluster1  !=  cluster2  ) 
 			{
 				// add the edge + vertices to T
 				T.addEdge( e );
 				// make sure they are in the same group
-				union( find(e.src) ,  find(e.dst) );
+				union( cluster1 ,  cluster2 );
 			}	
 			
 			if ( T.getVertexCount() == G.getVertexCount() ) // we're done. 
