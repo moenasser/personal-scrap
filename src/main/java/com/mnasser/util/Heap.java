@@ -140,8 +140,10 @@ public class Heap<K> implements Iterable<K>{
 		
 		maxIndex--;
 		K lastLeaf = heap.remove( maxIndex );
-		heap.set( 0 , lastLeaf ); // massive promotion
-		bubbleDown( 0 ); // push down until it rests at a location that maintains heap invariant
+		if( ! heap.isEmpty() ){
+			heap.set( 0 , lastLeaf ); // massive promotion
+			bubbleDown( 0 ); // push down until it rests at a location that maintains heap invariant
+		}
 		
 		return root;
 	}
