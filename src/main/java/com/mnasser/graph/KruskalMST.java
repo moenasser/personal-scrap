@@ -52,8 +52,10 @@ public class KruskalMST {
 			e.dst.visited = false;
 			e.src.leaderPointer = e.src; // each has itself as leader pointer
 			e.dst.leaderPointer = e.dst; // ie, its own cluster of 1
-			if (e.src.followers==null) e.src.followers = new ArrayList<Vertex>();
-			if (e.dst.followers==null) e.dst.followers = new ArrayList<Vertex>();
+			e.src.followers = null;
+			e.dst.followers = null;
+			//if (e.src.followers==null) e.src.followers = new ArrayList<Vertex>();
+			//if (e.dst.followers==null) e.dst.followers = new ArrayList<Vertex>();
 		}
 		
 		long lap = System.currentTimeMillis();
@@ -103,7 +105,7 @@ public class KruskalMST {
 	 * 1 by updating all leader pointers of each group.*/
 	protected static void union(Vertex v, Vertex u){
 		Vertex leader = null , follower = null;
-		if( v.followers.size() >= u.followers.size() ){
+		if( getFollowerSize(v) >= getFollowerSize(u) ){
 			leader = v;  follower = u;
 		}else{
 			leader = u;  follower = v;
@@ -111,18 +113,31 @@ public class KruskalMST {
 		//Vertex leader = (v.followers.size() >= u.followers.size())? v : u;
 		//Vertex follower = (u.followers.size() < v.followers.size() )? u : v;
 		
+		if ( leader.followers == null )
+			leader.followers = new ArrayList<Vertex>();
+		
 		// NOTE: This will create a "flat" tree of followers 1-level below the leader
 		// For Lazy-Union-Find you would allow multiple levels.
-		for( Vertex f : follower.followers ){
-			f.leaderPointer = leader;
-			f.followers.clear(); // for Lazy-Union-Find, allow follower to retain followers
+		if ( follower.followers != null ) {
+			for( Vertex ff : follower.followers ){
+				ff.leaderPointer = leader;
+				if ( ff.followers != null ){
+					ff.followers.clear(); // for Lazy-Union-Find, allow follower to retain followers
+					ff.followers = null;
+				}
+			}
+			leader.followers.addAll(follower.followers);
+			follower.followers.clear();
+			follower.followers = null;
 		}
 		
-		leader.followers.addAll(follower.followers);
 		leader.followers.add( follower );
-		follower.followers.clear();
 		follower.leaderPointer = leader;
 		// TODO : how do we find all followers beneath a leader vertex?
 		// TODO : must add follower array to each vertex
+	}
+	
+	private static int getFollowerSize(Vertex v){
+		return (v.followers == null) ? 0 : v.followers.size();
 	}
 }

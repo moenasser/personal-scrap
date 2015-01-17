@@ -215,6 +215,15 @@ public abstract class Graph {
 				return false;
 			return true;
 		}
+		public boolean equals(Vertex obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (id != obj.id)
+				return false;
+			return true;
+		}
 		public int compareTo(Vertex o) {
 			return Integer.valueOf(this.id).compareTo(o.id);
 		}
@@ -314,23 +323,7 @@ public abstract class Graph {
 			*/
 		}
 	}
-	/**Returns a randomly selected edge from graph <code>G</code>. */
-	public static Edge chooseRandomEdge(Graph G){
-		int esize = G.getEdges().size();
-		if( esize == 0 ) throw new RuntimeException("Attempt to choose an edge from graph w/ no edges!");//return null;
-		int idx = (int)(Math.random() * esize) % esize;
-		return G.getEdges().get(idx);
-	}
-	/**If graph <code>G</code> is no empty, returns a randomly selected vertex */
-	public static Vertex chooseRandomVertex(Graph G){
-		int esize = G.getVertices().size();
-		if( esize == 0 )throw new RuntimeException("Attempt to choose a vertex from empty graph!");
-		int idx = (int)(Math.random() * esize) % esize;
-		return G.getVertices().get(idx);
-	}
-	
 
-	
 	public String toAdjListString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(toInfoLine()).append('\n');
@@ -397,6 +390,38 @@ public abstract class Graph {
 		return RAND.nextInt() % 1000;
 	}
 	
+	/**Returns a randomly selected edge from graph <code>G</code>. */
+	public static Edge getRandomEdge(Graph G){
+		int esize = G.getEdges().size();
+		if( esize == 0 ) throw new RuntimeException("Attempt to choose an edge from graph w/ no edges!");//return null;
+		//int idx = (int)(Math.random() * esize) % esize;
+		return G.getEdges().get( RAND.nextInt(esize) );
+	}
+	/**If graph <code>G</code> is no empty, returns a randomly selected vertex */
+	public static Vertex getRandomVertex(Graph G){
+		int esize = G.getVertexCount();
+		if( esize == 0 )throw new RuntimeException("Attempt to choose a vertex from empty graph!");
+		//int idx = (int)(Math.random() * esize) % esize;
+		return G.getVertices().get( RAND.nextInt(esize) );
+	}
+
+	/**If graph <code>G</code> is not empty, returns a randomly selected vertex that is NOT <code>a</code>*/
+	public static Vertex getRandomVertexOther(Graph G, Vertex a){
+		int esize = G.getVertexCount();
+		if( esize == 0 )throw new RuntimeException("Attempt to choose a vertex from empty graph!");
+		//if( esize == 1 )throw new RuntimeException("Attempt to choose a different vertex from graph with only 1 entry!");
+		Vertex b;
+		do {
+			//int idx = (int)(Math.random() * esize) % esize;
+			b = G.getVertices().get( RAND.nextInt(esize) );
+		}while ( a.equals(b) );
+		
+		return b;
+	}
+
+
+	
+	
 
 	/**
 	 * Attempts to construct a graph with at least {@code vertexSize} 
@@ -410,54 +435,58 @@ public abstract class Graph {
 	public static Graph makeRandomGraph(int vertexSize){
 		long start = System.currentTimeMillis();
 		AdjacencyListGraph G = new AdjacencyListGraph(vertexSize);
+		
 		for( int ii =0; ii< vertexSize ; ii++){
 			G.addVertex(); 
 		}
 		long nodes = System.currentTimeMillis();
+
 		
 		// Make connections to every node
-		//while ( G.hasDisjointNodes() ){
-		for( int ii = 0 ; ii < vertexSize ; ii++ ) {
-			//Vertex a = G.getVertices().get( (int)(Math.random()*vertexSize)  );
-			//Vertex a = G.getVertex( RAND.nextInt(vertexSize) + 1  );
-			Vertex a = G.getVertex(ii + 1);
+		for( Vertex a : G.getVertices() ){
 			Vertex b;
 			do {
-				b = G.getVertex( RAND.nextInt(vertexSize) + 1  );
-			}while( a == b  ||  G.hasEdge( a, b )  ); 
+				b = //G.getVertex( RAND.nextInt(vertexSize) + 1  );
+					Graph.getRandomVertexOther(G, a);
+			}while( G.hasEdge( a, b )  ); 
 			
 			G.addEdge(  new Edge( a, b, Graph.getRandomCost() )  );
 		}
 		long edges = System.currentTimeMillis();
 
-		// Make a bunch of random edges
+		
+		// Make a bunch of more random edges
 		int rand_edges = vertexSize / 2;
 		for( int ii = 0 ; ii < rand_edges ; ii++ ) {
-		//while( G.hasDisjointNodes() ) {
-			Vertex a = G.getVertex( RAND.nextInt(vertexSize) + 1 );
+			Vertex a = 
+				Graph.getRandomVertex(G);
 			Vertex b;
 			do {
-				b = G.getVertex( RAND.nextInt(vertexSize) + 1);
-			}while( a == b  ||  G.hasEdge( a, b )  ); 
+				b = //G.getVertex( RAND.nextInt(vertexSize) + 1);
+					Graph.getRandomVertexOther(G, a);
+			}while( G.hasEdge( a, b )  ); 
 			
 			G.addEdge(  new Edge( a, b, Graph.getRandomCost() )  );
 		}
 		long more_rand_edges = System.currentTimeMillis();
 
 		
+		
 		// Find any lonely singleton nodes... 
 		for( Vertex a : G.getVertices() ) {
 			if( a.getEdges().isEmpty() ){ // ...disjoint? Give him a hug ... 
-				Vertex b;
-				do {
-					// find any random other node 
-					b = G.getVertex( RAND.nextInt(vertexSize) + 1 );
-				}while ( a == b  ); // (no, can't hug ourselves)
+				Vertex b = Graph.getRandomVertexOther(G, a);
+				//	do {
+				//		// find any random other node 
+				//		b = G.getVertex( RAND.nextInt(vertexSize) + 1 );
+				//	}while ( a.equals(b)  ); // (no, can't hug ourselves)
 				
 				G.addEdge( new Edge( a, b , Graph.getRandomCost() ) );
 			}
 		}
 		long singles = System.currentTimeMillis();
+		
+		
 		
 		System.out.println();
 		System.out.printf("Time to fill nodes        : %sms%n", nodes - start);

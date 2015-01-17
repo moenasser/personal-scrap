@@ -1,7 +1,6 @@
 package com.mnasser.graph;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ public class AdjacencyListGraph extends Graph{
 	private int connected_vertices = 0;
 
 	@Override public List<Edge> getEdges() {return edges;}
-	@Override public List<Vertex> getVertices() { Collections.sort(vertices); return vertices; }
+	@Override public List<Vertex> getVertices() { return vertices; } // whyyy sort!?? Sooo slow!! //Collections.sort(vertices); return vertices; }
 	
 	public int getEdgeCount(){		return edges.size();	}
 	public int getVertexCount(){	return vertices.size(); }
@@ -49,10 +48,11 @@ public class AdjacencyListGraph extends Graph{
 	}
 	public Vertex addVertex(Vertex v){
 		if( ! _vertmap.containsKey(v.id) ){
-			Vertex v1 = new Vertex(v.id); // clone it
-			v1.directed = isDirected();
-			vertices.add(v1);
-			_vertmap.put(v1.id, v1);
+			// clone it
+			//Vertex v1 = new Vertex(v.id); 
+			//v1.directed = isDirected();
+			vertices.add(v);
+			_vertmap.put(v.id, v);
 		}
 		return _vertmap.get(v.id);
 	}
@@ -106,7 +106,8 @@ public class AdjacencyListGraph extends Graph{
 		return (a==null)? false : _vertmap.containsKey(a.id);
 	}
 	public Vertex getVertex(int id){
-		return (hasVertex(id))? _vertmap.get(id) : null;
+		//return (hasVertex(id))? _vertmap.get(id) : null;
+		return _vertmap.get(id);
 	}
 	public Vertex getVertex(Vertex a){
 		return (a==null)? null : getVertex(a.id);

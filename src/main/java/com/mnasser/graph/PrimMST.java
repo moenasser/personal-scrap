@@ -40,7 +40,7 @@ public class PrimMST {
 		for( Vertex v : G.getVertices() )
 			v.visited = false;
 		
-		Vertex current = Graph.chooseRandomVertex( G );
+		Vertex current = Graph.getRandomVertex( G );
 		current.visited = true; // mark
 		T.addVertex(current);   // add to temp graph
 		

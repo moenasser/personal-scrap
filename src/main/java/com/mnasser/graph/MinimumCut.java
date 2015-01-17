@@ -19,7 +19,7 @@ public class MinimumCut {
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
 		
-		Edge e = Graph.chooseRandomEdge(G);
+		Edge e = Graph.getRandomEdge(G);
 		System.out.println(e);
 		G.removeEdge(e);
 		System.out.println(G.toMatrixString());
@@ -31,7 +31,7 @@ public class MinimumCut {
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
 		
-		Vertex v = Graph.chooseRandomVertex(G);
+		Vertex v = Graph.getRandomVertex(G);
 		System.out.println(v);
 		G.removeVertex(v);
 		System.out.println(G.toMatrixString());
@@ -40,7 +40,7 @@ public class MinimumCut {
 		
 		System.out.println("Contracting edge TEST ==========");
 		G = Graph.makeRandomGraph(5);
-		e = Graph.chooseRandomEdge(G);
+		e = Graph.getRandomEdge(G);
 		System.out.println(G.toMatrixString());
 		System.out.println(G);
 		System.out.println("Contracting edge " + e +" ... ");
@@ -52,7 +52,7 @@ public class MinimumCut {
 		
 		for( int ii =2; ii < G.getEdges().size(); ii++){
 			System.out.println("==========  " + ii + " ==========");
-			e = Graph.chooseRandomEdge(G);
+			e = Graph.getRandomEdge(G);
 			contractEdge(G, e);
 			System.out.println("Contracting edge " + e);
 			
@@ -109,7 +109,7 @@ public class MinimumCut {
 	static int findPossibleMinimumCut(Graph g){
 		//System.out.println("========== Finding minimum cut ");
 		while( g.getVertices().size() > 2 ){
-			Edge e = Graph.chooseRandomEdge(g);
+			Edge e = Graph.getRandomEdge(g);
 			//System.out.println("Contracting edge " + e);
 			contractEdge(g, e);
 			if( g.getVertices().size() == 3 || g.getVertices().size() == 4 ){
