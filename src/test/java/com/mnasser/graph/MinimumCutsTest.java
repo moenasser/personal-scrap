@@ -25,7 +25,7 @@ public class MinimumCutsTest {
 		for( Edge e : G.getEdges()) 
 			edgeCounter.put(e, 0);
 		for( int ii = 0; ii < 10000; ii ++){
-			Edge e = Graph.chooseRandomEdge(G);
+			Edge e = Graph.getRandomEdge(G);
 			if(!edgeCounter.containsKey(e))edgeCounter.put(e, 0);
 			edgeCounter.put(e, edgeCounter.get(e)+1);
 		}
@@ -52,7 +52,7 @@ public class MinimumCutsTest {
 	public void testRemoveRandomEdge() throws Exception {
 		Graph g = Graph.makeRandomGraph(5);
 		
-		Edge e = Graph.chooseRandomEdge(g);
+		Edge e = Graph.getRandomEdge(g);
 		Assert.assertTrue( g.hasEdge(e) );
 		
 		g.removeEdge(e);
@@ -66,7 +66,7 @@ public class MinimumCutsTest {
 	public void testRemoveRandomVertex() throws Exception {
 		Graph g = Graph.makeRandomGraph(5);
 		
-		Vertex a = Graph.chooseRandomVertex(g);
+		Vertex a = Graph.getRandomVertex(g);
 		Assert.assertTrue(g.hasVertex(a));
 		
 		List<Vertex> neighbors = new ArrayList<Vertex>();
@@ -114,9 +114,9 @@ public class MinimumCutsTest {
 		
 		Vertex one = g.getVertex(min);
 		
-		Assert.assertEquals( 2 , one.numEdges(g.getVertex(3)) );
-		Assert.assertEquals( 1 , one.numEdges(g.getVertex(4)) );
-		Assert.assertEquals( 1 , g.getVertex(4).numEdges(g.getVertex(3)) );
+		Assert.assertEquals( 2 , one.numEdgesShared(g.getVertex(3)) );
+		Assert.assertEquals( 1 , one.numEdgesShared(g.getVertex(4)) );
+		Assert.assertEquals( 1 , g.getVertex(4).numEdgesShared(g.getVertex(3)) );
 		
 		e = new Edge( new Vertex(1), new Vertex( 3 ) );
 		
@@ -124,10 +124,10 @@ public class MinimumCutsTest {
 		
 		one = g.getVertex(min);
 		
-		Assert.assertEquals( 0 , one.numEdges(g.getVertex(3)) );
-		Assert.assertEquals( 2 , one.numEdges(g.getVertex(4)) );
-		Assert.assertEquals( 0 , g.getVertex(4).numEdges(g.getVertex(3)) );
-		Assert.assertEquals( 2 , g.getVertex(4).numEdges( one ) );
+		Assert.assertEquals( 0 , one.numEdgesShared(g.getVertex(3)) );
+		Assert.assertEquals( 2 , one.numEdgesShared(g.getVertex(4)) );
+		Assert.assertEquals( 0 , g.getVertex(4).numEdgesShared(g.getVertex(3)) );
+		Assert.assertEquals( 2 , g.getVertex(4).numEdgesShared( one ) );
 		Assert.assertEquals( 2,  g.getVertices().size() );
 	}
 

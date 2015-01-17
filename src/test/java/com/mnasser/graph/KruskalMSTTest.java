@@ -99,10 +99,11 @@ public class KruskalMSTTest {
 	
 	@Test
 	public void randomTest(){
-		Graph G = Graph.makeRandomGraph( 100000 );
+		Graph G = Graph.makeRandomGraph( 200000 );
 		System.out.println( G.toInfoLine() );
 		
 		Graph T = KruskalMST.findMST( G );
+		
 		System.out.println( T.toInfoLine() );
 		
 		int total_cost = 0;
@@ -111,5 +112,5 @@ public class KruskalMSTTest {
 		
 		System.out.println("Total cost of MST  : " + total_cost);
 	}
-
+	
 }
