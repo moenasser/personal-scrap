@@ -9,7 +9,9 @@ import com.mnasser.util.Heap;
 /**
  * Kruskal's Minimum Spanning Tree algorithm.
  * 
- * Using the Union-Find technique we can 
+ * Using the Union-Find technique we can approach O(mlogn) worst case 
+ * in finding the minimum set of edges that spans all vertices in a given
+ * graph <code>G</code>.
  * @author Moe
  */
 public class KruskalMST {
@@ -31,11 +33,15 @@ public class KruskalMST {
 	 * We determine if a closed circle is to be formed by keeping track of the
 	 * cluster group each vertex is being added to.  This is what the <code>leader 
 	 * pointer</code> on each vertex is for. 
+	 * </p>
+	 * NOTE : This algorithm is "naive" only that we could do better than 
+	 * {@code O(mlogn)} upper bound.
 	 * 
-	 * @param G
-	 * @return T
+	 * @param G A graph whose MST is desired
+	 * @return T The minimum spanning tree of {@code G}
+	 * @see findMST
 	 */
-	public static Graph findMST(Graph G){
+	public static Graph findMSTNaive(Graph G){
 		// Our MST
 		Graph T = new AdjacencyListGraph();
 		

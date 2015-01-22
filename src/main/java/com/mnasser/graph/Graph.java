@@ -141,7 +141,7 @@ public abstract class Graph {
 		}
 		/**Returns the number of edges incident on both this vertex and on
 		 * the given vertex <code>b</cdoe>*/
-		int numEdges(Vertex b ){
+		int numEdgesShared(Vertex b ){
 			if( b == null )	return 0; 
 			int ii = 0;
 			for(Edge e : edges){

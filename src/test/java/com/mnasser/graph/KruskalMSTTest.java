@@ -37,7 +37,7 @@ public class KruskalMSTTest {
 		
 		System.out.println(G);
 		
-		Graph T = KruskalMST.findMST(G);
+		Graph T = KruskalMST.findMSTNaive(G);
 		
 		System.out.println(T);
 		
@@ -51,7 +51,7 @@ public class KruskalMSTTest {
 		Graph G = loadTestGraph("edges_graph.txt");
 		
 		long fileLoad = System.currentTimeMillis();
-		Graph T = KruskalMST.findMST( G );
+		Graph T = KruskalMST.findMSTNaive( G );
 		
 		long mstTime = System.currentTimeMillis();
 		
@@ -102,7 +102,7 @@ public class KruskalMSTTest {
 		Graph G = Graph.makeRandomGraph( 200000 );
 		System.out.println( G.toInfoLine() );
 		
-		Graph T = KruskalMST.findMST( G );
+		Graph T = KruskalMST.findMSTNaive( G );
 		
 		System.out.println( T.toInfoLine() );
 		
